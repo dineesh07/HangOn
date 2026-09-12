@@ -563,6 +563,9 @@ export default function App() {
         <div className="footer-tagline">
           Built instead of touching some grass.
         </div>
+        <div style={{ fontSize: '0.92rem', color: '#475569', fontWeight: 600 }}>
+          Made by Dineesh · Unfortunately, there’s more <a href="https://dineeshm.vercel.app/" target="_blank" rel="noreferrer" style={{ color: '#0284c7', textDecoration: 'underline', fontWeight: 700 }}>Click here</a>
+        </div>
         <div className="footer-links">
           <a href="https://github.com/dineesh07/HangOn" target="_blank" rel="noreferrer">GitHub Repository</a>
           <span>•</span>
