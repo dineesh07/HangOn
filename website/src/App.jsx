@@ -151,21 +151,13 @@ export default function App() {
         <div className="container">
           <div className="hero-grid">
             
-            {/* Left: Headline & Pitch */}
             <div className="hero-content">
-              <div>
-                <span className="badge badge-mint">
-                  <Sparkles size={14} />
-                  Cozy Desktop Magic
-                </span>
-              </div>
-
               <h1 className="hero-title">
-                Hang something <span className="highlight">lucky</span> from your screen.
+                Hang something <span className="highlight">lucky</span> from your screen. Or don't. We're not your mom.
               </h1>
 
               <p className="hero-desc">
-                A free, gentle desktop talisman for Windows that swings with realistic pendulum physics, plays procedural crystal chimes, and stays completely click-through so it never gets in your way.
+                Got bored. Made a thing that hangs from your screen. Added physics because why not. Added sounds because apparently that wasn’t enough. It’s free. Have fun.
               </p>
 
               <div className="hero-ctas">
