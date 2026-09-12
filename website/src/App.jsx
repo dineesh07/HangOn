@@ -561,7 +561,7 @@ export default function App() {
       {/* Footer */}
       <footer className="footer">
         <div className="footer-tagline">
-          Made with quiet magic for your desktop.
+          Built instead of touching some grass.
         </div>
         <div className="footer-links">
           <a href="https://github.com/dineesh07/HangOn" target="_blank" rel="noreferrer">GitHub Repository</a>

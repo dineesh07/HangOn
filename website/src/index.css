@@ -260,6 +260,9 @@ a {
 }
 
 .hero-title .highlight {
+  display: inline-block;
+  padding-right: 0.18em;
+  padding-bottom: 0.04em;
   background: linear-gradient(135deg, #0284c7 0%, #092db3 50%, #7e22ce 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
