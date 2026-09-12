@@ -250,35 +250,72 @@ if (charm && stageWrapper) {
 }
 
 // -------------------------------------------------------------
-// 3. Audio Chime Button
+// 3. Audio Chime & Blessing Buttons
 // -------------------------------------------------------------
 const ringChimeBtn = document.getElementById('ring-chime-btn');
 if (ringChimeBtn) {
   ringChimeBtn.addEventListener('click', () => {
     playBlessingSound();
-    if (lengthVelocity === 0) {
-      lengthVelocity += 30;
-      angularVelocity += 2.0;
+    lengthVelocity += 30;
+    angularVelocity += 2.2;
+  });
+}
+
+const spotlightBlessBtn = document.getElementById('spotlight-bless-btn');
+if (spotlightBlessBtn) {
+  spotlightBlessBtn.addEventListener('click', () => {
+    playBlessingSound();
+    const spotlightImg = document.getElementById('spotlight-charm-img');
+    if (spotlightImg) {
+      spotlightImg.style.transform = 'scale(1.25)';
+      setTimeout(() => {
+        spotlightImg.style.transform = 'scale(1)';
+      }, 350);
     }
   });
 }
 
 // -------------------------------------------------------------
-// 4. Interactive Charm Gallery Switcher
+// 4. Interactive Charm Gallery Switcher & Inline Spotlight
 // -------------------------------------------------------------
 const charmCards = document.querySelectorAll('.charm-card');
+const spotlightImg = document.getElementById('spotlight-charm-img');
+const spotlightTitle = document.getElementById('spotlight-title');
+const spotlightBlessing = document.getElementById('spotlight-blessing');
+
 charmCards.forEach((card) => {
   card.addEventListener('click', () => {
     charmCards.forEach((c) => c.classList.remove('active'));
     card.classList.add('active');
 
     const charmFile = card.getAttribute('data-charm');
+    const charmName = card.getAttribute('data-name') || card.querySelector('.charm-name').textContent;
+    const charmBless = card.getAttribute('data-blessing') || card.querySelector('.charm-blessing')?.textContent;
+
+    // Update Hero Live Rig
     if (charmFile && charmImg) {
       charmImg.src = `assets/charms/${charmFile}`;
-      playBlessingSound();
       lengthVelocity += 35;
       angularVelocity += 3.0;
     }
+
+    // Update Gallery Inline Spotlight Rig
+    if (spotlightImg && charmFile) {
+      spotlightImg.src = `assets/charms/${charmFile}`;
+      spotlightImg.style.transform = 'scale(1.2) rotate(6deg)';
+      setTimeout(() => {
+        spotlightImg.style.transform = 'scale(1) rotate(0deg)';
+      }, 300);
+    }
+
+    if (spotlightTitle && charmName) {
+      spotlightTitle.textContent = charmName;
+    }
+    if (spotlightBlessing && charmBless) {
+      spotlightBlessing.textContent = charmBless;
+    }
+
+    playBlessingSound();
   });
 });
 
@@ -290,7 +327,7 @@ if (copyBtn) {
   copyBtn.addEventListener('click', () => {
     const textToCopy = 'git push && start hangon://bless';
     navigator.clipboard.writeText(textToCopy).then(() => {
-      copyBtn.textContent = 'Copied! ✨';
+      copyBtn.textContent = 'Copied!';
       setTimeout(() => {
         copyBtn.textContent = 'Copy';
       }, 2200);
