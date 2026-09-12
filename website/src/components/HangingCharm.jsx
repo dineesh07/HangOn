@@ -80,27 +80,20 @@ export default function HangingCharm({
       const MAX_ANGLE = 62;
 
       if (!p.isDragging) {
-        // 1. Angular Pendulum Motion
-        const angularAcc = -springK * (p.angle * Math.PI / 180) - damping * p.angularVelocity;
+        // Continuous ambient gentle breeze (smooth, harmonic, infinite, seamless)
+        const ambientBreeze = Math.sin(now * 0.0016) * 0.85;
+
+        // 1. Angular Pendulum Motion with seamless harmonic transition
+        const angularAcc = -springK * (p.angle * Math.PI / 180) - damping * p.angularVelocity + ambientBreeze;
         p.angularVelocity += angularAcc * dt;
         p.angle += p.angularVelocity * (180 / Math.PI) * dt;
         p.angle = Math.max(-MAX_ANGLE, Math.min(MAX_ANGLE, p.angle));
 
-        // Organic idle breathing sway if resting
-        if (Math.abs(p.angle) < 0.08 && Math.abs(p.angularVelocity) < 0.08) {
-          p.angle = Math.sin(now / 1000 * 1.6) * 3.2;
-        }
-
-        // 2. Vertical Stretch Elasticity
+        // 2. Vertical Stretch Elasticity (smooth spring bounce back to restLength)
         const displacement = p.currentLength - p.restLength;
         const lengthAcc = -stretchK * displacement - stretchDamping * p.lengthVelocity;
         p.lengthVelocity += lengthAcc * dt;
         p.currentLength += p.lengthVelocity * dt;
-
-        if (Math.abs(displacement) < 0.15 && Math.abs(p.lengthVelocity) < 0.15) {
-          p.currentLength = p.restLength;
-          p.lengthVelocity = 0;
-        }
       }
 
       updateDOM(p.angle, p.currentLength);
