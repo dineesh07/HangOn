@@ -27,7 +27,7 @@
         "nsis",
         "portable"
       ],
-      "icon": "assets/tray-icon.png",
+      "icon": "assets/icon.ico",
       "signAndEditExecutable": false
     },
     "nsis": {
@@ -35,7 +35,9 @@
       "allowToChangeInstallationDirectory": true,
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
-      "shortcutName": "Hang On"
+      "shortcutName": "Hang On",
+      "installerIcon": "assets/icon.ico",
+      "uninstallerIcon": "assets/icon.ico"
     },
     "portable": {
       "artifactName": "Hang-On-Portable.exe"

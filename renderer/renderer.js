@@ -267,15 +267,11 @@ requestAnimationFrame(physicsStep);
 let history = [];
 
 function getStaticPivotPoint() {
-  const offset = config.rightOffset !== undefined ? config.rightOffset : 60;
-  let px = window.innerWidth - offset;
-  if (config.positionMode === 'top-center') {
-    px = window.innerWidth / 2;
-  } else if (config.positionMode === 'top-left') {
-    px = offset;
-  }
-  const py = 20;
-  return { px, py };
+  const rect = pivot.getBoundingClientRect();
+  return {
+    px: rect.left + rect.width / 2,
+    py: rect.top
+  };
 }
 
 function getRelativeVector(clientX, clientY) {
@@ -283,8 +279,9 @@ function getRelativeVector(clientX, clientY) {
   const dx = clientX - px;
   const dy = clientY - py;
   const dist = Math.sqrt(dx * dx + dy * dy);
-  // Math.atan2(dx, dy): dx < 0 (left) => negative angle, dx > 0 (right) => positive angle
-  const ang = Math.atan2(dx, Math.max(6, dy)) * (180 / Math.PI);
+  // dx < 0 (drag left)  => ang > 0 => rotate(+deg) swings charm to the left
+  // dx > 0 (drag right) => ang < 0 => rotate(-deg) swings charm to the right
+  const ang = -Math.atan2(dx, Math.max(8, dy)) * (180 / Math.PI);
   return { dx, dy, dist, ang };
 }
 

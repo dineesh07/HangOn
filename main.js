@@ -83,22 +83,33 @@ function updateOverlayBounds() {
   win.setBounds(bounds);
 }
 
-const fs = require('fs');
-
 function getAppIcon() {
-  const defaultIconPath = path.join(__dirname, 'assets', 'tray-icon.png');
-  if (fs.existsSync(defaultIconPath)) {
-    const defaultImg = nativeImage.createFromPath(defaultIconPath);
-    if (!defaultImg.isEmpty()) return defaultImg;
+  const icoPath = path.join(__dirname, 'assets', 'icon.ico');
+  const pngPath = path.join(__dirname, 'assets', 'icon.png');
+  const trayPath = path.join(__dirname, 'assets', 'tray-icon.png');
+  if (fs.existsSync(icoPath)) {
+    const img = nativeImage.createFromPath(icoPath);
+    if (!img.isEmpty()) return img;
+  }
+  if (fs.existsSync(pngPath)) {
+    const img = nativeImage.createFromPath(pngPath);
+    if (!img.isEmpty()) return img;
+  }
+  if (fs.existsSync(trayPath)) {
+    const img = nativeImage.createFromPath(trayPath);
+    if (!img.isEmpty()) return img;
   }
   return nativeImage.createEmpty();
 }
 
 function updateTrayIcon() {
-  const icon = getAppIcon();
-  if (tray && !icon.isEmpty()) {
+  const trayPath = path.join(__dirname, 'assets', 'tray-icon.png');
+  if (tray && fs.existsSync(trayPath)) {
     try {
-      tray.setImage(icon.resize({ width: 16, height: 16 }));
+      const img = nativeImage.createFromPath(trayPath);
+      if (!img.isEmpty()) {
+        tray.setImage(img.resize({ width: 16, height: 16 }));
+      }
     } catch (e) {}
   }
 }
@@ -118,7 +129,7 @@ function openSettingsWindow() {
     minWidth: 550,
     minHeight: 600,
     title: 'Hang On Settings',
-    icon: icon.isEmpty() ? undefined : icon.resize({ width: 32, height: 32 }),
+    icon: icon.isEmpty() ? undefined : icon,
     backgroundColor: '#f8fafc',
     autoHideMenuBar: true,
     show: false,
