@@ -1,5 +1,6 @@
 const { app, BrowserWindow, Tray, Menu, screen, globalShortcut, ipcMain, nativeImage, dialog, shell } = require('electron');
 const path = require('path');
+const fs = require('fs');
 const { ConfigStore, PRESET_CHARMS } = require('./configStore');
 
 // Single instance lock
