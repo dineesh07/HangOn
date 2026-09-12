@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Lucky Dangle Settings & Customizer</title>
+<title>Hang On Settings & Customizer</title>
 <!-- Google Font: Outfit -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -19,7 +19,7 @@
           <img src="../assets/charms/evil-eye.svg" alt="logo" class="header-logo" />
         </div>
         <div>
-          <h1 class="header-title">Lucky Dangle</h1>
+          <h1 class="header-title">Hang On</h1>
           <p class="header-subtitle">Desktop Talisman & Physics Charm</p>
         </div>
       </div>
@@ -61,6 +61,128 @@
 
         <div id="charms-grid" class="charms-grid">
           <!-- Dynamically populated cards -->
+        </div>
+      </section>
+
+      <!-- Section: AI Charm Prompt Generator -->
+      <section class="card-section ai-prompt-section">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title">AI Charm Prompt Generator</h2>
+            <p class="section-desc">Generate optimized prompts for Midjourney, DALL-E, or Gemini to create custom charms matching Hang On's aesthetic.</p>
+          </div>
+        </div>
+
+        <div class="prompt-generator-card">
+          <div class="generator-controls">
+            <!-- Optional Object / Subject -->
+            <div class="input-group">
+              <div class="input-label-row">
+                <label class="input-label" for="prompt-object">What Object or Symbol?</label>
+                <span class="label-badge-optional">Optional</span>
+              </div>
+              <input type="text" id="prompt-object" class="text-input" placeholder="e.g. Lucky Cat, Cyber Skull, Golden Coin, Dragon, Star, Pixel Heart... (or leave blank)" />
+            </div>
+
+            <div class="generator-selectors-grid">
+              <!-- Talisman Style -->
+              <div class="input-group">
+                <label class="input-label">Talisman Style & Material</label>
+                <div class="style-selector" id="style-selector">
+                  <label class="style-radio">
+                    <input type="radio" name="ai-style" value="glass" checked />
+                    <span class="style-chip">Blue Evil Eye Glass</span>
+                  </label>
+                  <label class="style-radio">
+                    <input type="radio" name="ai-style" value="gold" />
+                    <span class="style-chip">Solid Gold Relic</span>
+                  </label>
+                  <label class="style-radio">
+                    <input type="radio" name="ai-style" value="neon" />
+                    <span class="style-chip">Cyberpunk Hologram</span>
+                  </label>
+                  <label class="style-radio">
+                    <input type="radio" name="ai-style" value="jade" />
+                    <span class="style-chip">Imperial Jade</span>
+                  </label>
+                  <label class="style-radio">
+                    <input type="radio" name="ai-style" value="crystal" />
+                    <span class="style-chip">Mystic Quartz Prism</span>
+                  </label>
+                  <label class="style-radio">
+                    <input type="radio" name="ai-style" value="enamel" />
+                    <span class="style-chip">Glossy Enamel Pin</span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- Art / Render Medium -->
+              <div class="input-group">
+                <label class="input-label">Art & Render Medium</label>
+                <div class="style-selector" id="format-selector">
+                  <label class="style-radio">
+                    <input type="radio" name="ai-format" value="3d" checked />
+                    <span class="style-chip">3D Octane Render</span>
+                  </label>
+                  <label class="style-radio">
+                    <input type="radio" name="ai-format" value="vector" />
+                    <span class="style-chip">Crisp Vector SVG</span>
+                  </label>
+                  <label class="style-radio">
+                    <input type="radio" name="ai-format" value="pixel" />
+                    <span class="style-chip">16-Bit Pixel Art</span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- Attachment -->
+              <div class="input-group">
+                <label class="input-label">Hanging Attachment</label>
+                <div class="style-selector" id="attach-selector">
+                  <label class="style-radio">
+                    <input type="radio" name="ai-attach" value="loop" checked />
+                    <span class="style-chip">Top Golden Loop Ring</span>
+                  </label>
+                  <label class="style-radio">
+                    <input type="radio" name="ai-attach" value="beads" />
+                    <span class="style-chip">Cord with Beads</span>
+                  </label>
+                  <label class="style-radio">
+                    <input type="radio" name="ai-attach" value="clean" />
+                    <span class="style-chip">Clean Cutout</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Prompt Output Box -->
+          <div class="prompt-output-box">
+            <div class="output-header">
+              <span class="output-title">Engineered AI Prompt:</span>
+              <button type="button" id="btn-copy-prompt" class="btn btn-primary btn-sm">
+                <svg id="copy-icon-svg" class="btn-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                </svg>
+                <span id="copy-btn-text">Copy Prompt</span>
+              </button>
+            </div>
+            <div class="prompt-text-display" id="prompt-output-text">
+              <!-- Dynamically populated prompt text -->
+            </div>
+            <div class="output-footer">
+              <span class="output-hint">Paste into Midjourney / ChatGPT / DALL-E / Gemini, download the transparent PNG/SVG, then upload it into Hang On:</span>
+              <button type="button" id="btn-prompt-upload" class="btn btn-secondary btn-sm">
+                <svg class="btn-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="17 8 12 3 7 8"></polyline>
+                  <line x1="12" y1="3" x2="12" y2="15"></line>
+                </svg>
+                <span>Upload Resulting Charm</span>
+              </button>
+            </div>
+          </div>
         </div>
       </section>
 

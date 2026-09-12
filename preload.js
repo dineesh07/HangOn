@@ -24,6 +24,7 @@ contextBridge.exposeInMainWorld('dangle', {
 
   // Custom charms
   pickCustomCharm: () => ipcRenderer.invoke('pick-custom-charm'),
+  saveGeneratedCharm: (dataUrl, name, hasBeads) => ipcRenderer.invoke('save-generated-charm', dataUrl, name, hasBeads),
   deleteCustomCharm: (id) => ipcRenderer.invoke('delete-custom-charm', id),
   openCharmsFolder: () => ipcRenderer.invoke('open-charms-folder'),
   openSettings: () => ipcRenderer.invoke('open-settings'),

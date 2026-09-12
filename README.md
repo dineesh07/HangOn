@@ -23,7 +23,7 @@ A desktop talisman and physics charm that hangs gracefully from the top-right co
   - **Charm Size Slider**: Scale charm from 50px to 200px.
   - **Right Margin Offset**: Fine-tune distance from screen edge.
   - **Swing Physics**: Adjust springiness and damping.
-- **Synthesized Blessing Chime**: Plays harmonic bell chimes on blessing ritual (Ctrl+S).
+- **Synthesized Blessing Chime**: Plays 5 unique harmonic bell chimes on blessing ritual (`Ctrl + Q`).
 - **True Click-Through Transparency**: Mouse clicks pass through the transparent area so it never blocks your desktop work.
 
 ---
@@ -33,7 +33,7 @@ A desktop talisman and physics charm that hangs gracefully from the top-right co
 | Action | Control |
 |---|---|
 | **Toggle Show / Hide** | **Left-Click** Tray Icon or press `Ctrl + D` |
-| **Blessing Ritual & Chime** | Press `Ctrl + S` or click "Bless Now" |
+| **Blessing Ritual & Chime** | Press `Ctrl + Q` or click "Bless Now" |
 | **Switch Dangles** | Right-click tray icon or open Customizer |
 | **Open Settings** | Double-click tray icon or select "Settings & Customizer..." |
 | **Interactive Physics** | Left-click & drag the charm with your mouse to swing/flick |
@@ -56,6 +56,6 @@ A desktop talisman and physics charm that hangs gracefully from the top-right co
 # Run locally
 npm start
 
-# Build Windows Installer / Executable
-npm run dist
+# Build standalone unpacked application
+npm run dist:dir
 ```

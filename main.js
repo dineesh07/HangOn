@@ -86,32 +86,11 @@ function updateOverlayBounds() {
 const fs = require('fs');
 
 function getAppIcon() {
-  try {
-    const activeCharm = configStore ? configStore.getActiveCharm() : null;
-    if (activeCharm) {
-      if (activeCharm.type === 'custom' && activeCharm.fullPath && fs.existsSync(activeCharm.fullPath)) {
-        const customImg = nativeImage.createFromPath(activeCharm.fullPath);
-        if (!customImg.isEmpty()) {
-          return customImg;
-        }
-      }
-      if (activeCharm.file) {
-        const presetPath = path.join(__dirname, 'assets', 'charms', activeCharm.file);
-        if (fs.existsSync(presetPath)) {
-          const presetImg = nativeImage.createFromPath(presetPath);
-          if (!presetImg.isEmpty()) {
-            return presetImg;
-          }
-        }
-      }
-    }
-  } catch (e) {
-    console.warn('Error loading active charm icon:', e);
-  }
-
   const defaultIconPath = path.join(__dirname, 'assets', 'tray-icon.png');
-  const defaultImg = nativeImage.createFromPath(defaultIconPath);
-  if (!defaultImg.isEmpty()) return defaultImg;
+  if (fs.existsSync(defaultIconPath)) {
+    const defaultImg = nativeImage.createFromPath(defaultIconPath);
+    if (!defaultImg.isEmpty()) return defaultImg;
+  }
   return nativeImage.createEmpty();
 }
 
@@ -120,11 +99,6 @@ function updateTrayIcon() {
   if (tray && !icon.isEmpty()) {
     try {
       tray.setImage(icon.resize({ width: 16, height: 16 }));
-    } catch (e) {}
-  }
-  if (settingsWin && !settingsWin.isDestroyed() && !icon.isEmpty()) {
-    try {
-      settingsWin.setIcon(icon.resize({ width: 32, height: 32 }));
     } catch (e) {}
   }
 }
@@ -143,7 +117,7 @@ function openSettingsWindow() {
     height: 760,
     minWidth: 550,
     minHeight: 600,
-    title: 'Lucky Dangle Settings',
+    title: 'Hang On Settings',
     icon: icon.isEmpty() ? undefined : icon.resize({ width: 32, height: 32 }),
     backgroundColor: '#f8fafc',
     autoHideMenuBar: true,
@@ -171,6 +145,15 @@ function syncConfigToWindows() {
   };
 
   if (win && !win.isDestroyed()) {
+    if (fullConfig.enabled) {
+      if (!win.isVisible()) {
+        win.showInactive();
+      }
+    } else {
+      if (win.isVisible()) {
+        win.hide();
+      }
+    }
     win.webContents.send('config-updated', payload);
   }
   if (settingsWin && !settingsWin.isDestroyed()) {
@@ -184,17 +167,7 @@ function syncConfigToWindows() {
 
 function toggleVisibility() {
   const current = configStore.get('enabled');
-  const next = !current;
-  configStore.set('enabled', next);
-
-  if (win && !win.isDestroyed()) {
-    if (next) {
-      win.showInactive();
-    } else {
-      win.hide();
-    }
-  }
-
+  configStore.set('enabled', !current);
   syncConfigToWindows();
 }
 
@@ -203,11 +176,9 @@ function performBlessing() {
 
   if (!configStore.get('enabled')) {
     configStore.set('enabled', true);
-    win.showInactive();
   }
-
-  win.webContents.send('perform-ritual');
   syncConfigToWindows();
+  win.webContents.send('perform-ritual');
 }
 
 async function promptAddCustomCharm() {
@@ -320,7 +291,7 @@ function updateTrayMenu() {
     },
     { type: 'separator' },
     {
-      label: 'Perform Blessing Ritual (Ctrl+S)',
+      label: 'Perform Blessing Ritual (Ctrl+Q)',
       click: performBlessing
     },
     {
@@ -329,7 +300,7 @@ function updateTrayMenu() {
     },
     { type: 'separator' },
     {
-      label: 'Quit Lucky Dangle',
+      label: 'Quit Hang On',
       click: () => app.quit()
     }
   ]);
@@ -340,7 +311,7 @@ function updateTrayMenu() {
 function createTray() {
   const icon = getAppIcon();
   tray = new Tray(icon.isEmpty() ? nativeImage.createEmpty() : icon.resize({ width: 16, height: 16 }));
-  tray.setToolTip('Lucky Dangle - Click to toggle');
+  tray.setToolTip('Hang On - Click to toggle');
 
   // Single left-click toggles Enable / Disable
   tray.on('click', () => {
@@ -357,10 +328,10 @@ function createTray() {
 
 function registerShortcuts() {
   globalShortcut.register('Control+D', toggleVisibility);
-  globalShortcut.register('Control+S', performBlessing);
+  globalShortcut.register('Control+Q', performBlessing);
 }
 
-// Custom protocol luckydangle://bless
+// Custom protocol hangon://bless or luckydangle://bless
 function handleProtocolUrl(url) {
   if (!url) return;
   if (url.includes('bless')) {
@@ -370,10 +341,10 @@ function handleProtocolUrl(url) {
   }
 }
 
-app.setAsDefaultProtocolClient('luckydangle');
+app.setAsDefaultProtocolClient('hangon');
 
 app.on('second-instance', (event, argv) => {
-  const url = argv.find((arg) => arg.startsWith('luckydangle://'));
+  const url = argv.find((arg) => arg.startsWith('hangon://') || arg.startsWith('luckydangle://'));
   if (url) {
     handleProtocolUrl(url);
   } else {
@@ -421,6 +392,14 @@ ipcMain.handle('open-charms-folder', () => {
   }
 });
 
+ipcMain.handle('save-generated-charm', (event, dataUrl, name, hasBeads) => {
+  if (configStore) {
+    configStore.saveGeneratedCharm(dataUrl, name, hasBeads);
+    syncConfigToWindows();
+  }
+  return configStore.getAll();
+});
+
 ipcMain.handle('delete-custom-charm', (event, id) => {
   configStore.removeCustomCharm(id);
   syncConfigToWindows();
@@ -432,7 +411,7 @@ ipcMain.handle('open-settings', () => {
 });
 
 app.whenReady().then(() => {
-  app.setAppUserModelId('com.yourname.mydangle');
+  app.setAppUserModelId('com.hangon.app');
   configStore = new ConfigStore();
   createOverlayWindow();
   createTray();

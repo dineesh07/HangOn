@@ -152,6 +152,42 @@ class ConfigStore {
     }
   }
 
+  saveGeneratedCharm(base64Data, customName, hasBeads = false) {
+    try {
+      const id = 'custom_' + Date.now();
+      const name = customName || 'Custom Charm';
+      const targetFilename = `${id}.png`;
+      const targetPath = path.join(this.customCharmsDir, targetFilename);
+
+      // Strip data:image/png;base64, prefix if present
+      const base64Pure = base64Data.replace(/^data:image\/\w+;base64,/, '');
+      const buffer = Buffer.from(base64Pure, 'base64');
+      fs.writeFileSync(targetPath, buffer);
+
+      const charmObj = {
+        id,
+        name,
+        type: 'custom',
+        file: targetFilename,
+        fullPath: targetPath,
+        ext: '.png',
+        hasBeads: !!hasBeads,
+        description: 'AI / Custom Studio Generated Dangle'
+      };
+
+      if (!this.data.customCharms) {
+        this.data.customCharms = [];
+      }
+      this.data.customCharms.push(charmObj);
+      this.data.selectedCharmId = id;
+      this.saveConfig();
+      return charmObj;
+    } catch (err) {
+      console.error('Failed to save generated charm:', err);
+      throw err;
+    }
+  }
+
   removeCustomCharm(id) {
     if (!this.data.customCharms) return;
     const charm = this.data.customCharms.find(c => c.id === id);

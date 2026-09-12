@@ -1,28 +1,49 @@
 {
-  "name": "my-lucky-dangle",
+  "name": "hang-on",
   "version": "1.0.0",
-  "description": "A lucky charm that dangles from the top of your screen (Windows)",
+  "description": "A desktop talisman and physics charm for Windows",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "dist": "electron-builder --win"
+    "dist": "electron-builder --win",
+    "dist:dir": "electron-builder --win --dir",
+    "dist:portable": "electron-builder --win portable",
+    "dist:installer": "electron-builder --win nsis"
   },
-  "author": "you",
+  "author": "Dineesh",
   "license": "MIT",
   "devDependencies": {
     "electron": "^31.0.0",
     "electron-builder": "^24.13.3"
   },
   "build": {
-    "appId": "com.yourname.mydangle",
-    "productName": "My Lucky Dangle",
+    "appId": "com.hangon.app",
+    "productName": "Hang On",
+    "directories": {
+      "output": "dist"
+    },
     "win": {
-      "target": "nsis",
-      "icon": "assets/tray-icon.png"
+      "target": [
+        "nsis",
+        "portable"
+      ],
+      "icon": "assets/tray-icon.png",
+      "signAndEditExecutable": false
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Hang On"
+    },
+    "portable": {
+      "artifactName": "Hang-On-Portable.exe"
     },
     "files": [
       "main.js",
       "preload.js",
+      "configStore.js",
       "renderer/**/*",
       "assets/**/*"
     ]

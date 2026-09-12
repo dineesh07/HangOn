@@ -24,6 +24,14 @@ const btnUpload = document.getElementById('btn-upload');
 const btnRitual = document.getElementById('btn-ritual');
 const btnReset = document.getElementById('btn-reset');
 
+// AI Prompt Generator DOM Elements
+const promptObject = document.getElementById('prompt-object');
+const btnCopyPrompt = document.getElementById('btn-copy-prompt');
+const copyBtnText = document.getElementById('copy-btn-text');
+const copyIconSvg = document.getElementById('copy-icon-svg');
+const promptOutputText = document.getElementById('prompt-output-text');
+const btnPromptUpload = document.getElementById('btn-prompt-upload');
+
 // Load Initial Config
 async function init() {
   if (!window.dangle) return;
@@ -34,6 +42,8 @@ async function init() {
     currentConfig = cfg;
     renderConfig(cfg);
   });
+
+  initPromptGenerator();
 }
 
 function renderConfig(cfg) {
@@ -175,7 +185,7 @@ window.setOffset = function(val) {
   window.dangle.updateConfig({ rightOffset: val });
 };
 
-// Buttons
+// Standard Buttons
 btnUpload.addEventListener('click', async () => {
   if (!window.dangle) return;
   await window.dangle.pickCustomCharm();
@@ -202,5 +212,140 @@ btnReset.addEventListener('click', async () => {
   }
 });
 
+// ===============================================================
+// AI Charm Prompt Generator Logic
+// ===============================================================
+function initPromptGenerator() {
+  if (!promptOutputText) return;
+
+  // Listeners for inputs
+  if (promptObject) {
+    promptObject.addEventListener('input', updatePromptOutput);
+  }
+
+  document.querySelectorAll('input[name="ai-style"]').forEach((el) => {
+    el.addEventListener('change', updatePromptOutput);
+  });
+
+  document.querySelectorAll('input[name="ai-format"]').forEach((el) => {
+    el.addEventListener('change', updatePromptOutput);
+  });
+
+  document.querySelectorAll('input[name="ai-attach"]').forEach((el) => {
+    el.addEventListener('change', updatePromptOutput);
+  });
+
+  // Copy Prompt Button
+  if (btnCopyPrompt) {
+    btnCopyPrompt.addEventListener('click', () => {
+      const text = promptOutputText.textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        if (copyBtnText) copyBtnText.textContent = 'Copied!';
+        if (copyIconSvg) {
+          copyIconSvg.innerHTML = '<polyline points="20 6 9 17 4 12"></polyline>';
+        }
+        setTimeout(() => {
+          if (copyBtnText) copyBtnText.textContent = 'Copy Prompt';
+          if (copyIconSvg) {
+            copyIconSvg.innerHTML = '<rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>';
+          }
+        }, 2200);
+      });
+    });
+  }
+
+  // Upload resulting charm shortcut button
+  if (btnPromptUpload) {
+    btnPromptUpload.addEventListener('click', async () => {
+      if (window.dangle) {
+        await window.dangle.pickCustomCharm();
+      }
+    });
+  }
+
+  // Initial prompt generation
+  updatePromptOutput();
+}
+
+function updatePromptOutput() {
+  if (!promptOutputText) return;
+
+  const objectVal = promptObject ? promptObject.value.trim() : '';
+  const style = document.querySelector('input[name="ai-style"]:checked')?.value || 'glass';
+  const format = document.querySelector('input[name="ai-format"]:checked')?.value || '3d';
+  const attach = document.querySelector('input[name="ai-attach"]:checked')?.value || 'loop';
+
+  // 1. Subject description
+  let subjectStr = '';
+  if (objectVal) {
+    subjectStr = `A hanging talisman charm featuring a centered ${objectVal}`;
+  } else {
+    // Default abstract talisman matching built-in designs
+    if (style === 'glass') subjectStr = 'A hanging mystical protective evil-eye talisman amulet';
+    else if (style === 'gold') subjectStr = 'A hanging antique prosperity medallion talisman';
+    else if (style === 'neon') subjectStr = 'A hanging cyberpunk geometric energy talisman emblem';
+    else if (style === 'jade') subjectStr = 'A hanging imperial jade harmony talisman amulet';
+    else if (style === 'crystal') subjectStr = 'A hanging mystical quartz prism celestial crystal charm';
+    else if (style === 'enamel') subjectStr = 'A hanging lucky geometric badge talisman charm';
+  }
+
+  // 2. Material & Style description
+  let styleStr = '';
+  switch (style) {
+    case 'glass':
+      styleStr = 'crafted from lustrous cobalt blue, cyan, and white glass with glossy concentric rings and specular optical reflections, Mediterranean nazar aesthetic';
+      break;
+    case 'gold':
+      styleStr = 'crafted from solid polished 24k antique gold with intricate filigree engravings, beveled metallic edges, and warm golden highlights';
+      break;
+    case 'neon':
+      styleStr = 'designed as a futuristic holographic cyber emblem with glowing neon cyan, magenta, and electric violet laser accents';
+      break;
+    case 'jade':
+      styleStr = 'hand-carved from translucent imperial emerald green jade stone with smooth polished luster and delicate engraved relief details';
+      break;
+    case 'crystal':
+      styleStr = 'faceted sparkling celestial quartz crystal gemstone with diamond cuts, rainbow chromatic aberration, and iridescent light refraction';
+      break;
+    case 'enamel':
+      styleStr = 'premium cloisonné glossy enamel with polished gold metallic borders, vibrant contrasting colors, and smooth protective resin coat';
+      break;
+  }
+
+  // 3. Art & Render Medium
+  let formatStr = '';
+  switch (format) {
+    case '3d':
+      formatStr = 'hyper-detailed 3D volumetric render, Octane render 8k, raytraced reflections, studio lighting';
+      break;
+    case 'vector':
+      formatStr = 'crisp minimalist vector graphic, clean bold line-art, flat modern shading, SVG sticker badge style';
+      break;
+    case 'pixel':
+      formatStr = 'crisp retro 16-bit pixel art talisman sprite, clean dithering, vivid color palette, game asset style';
+      break;
+  }
+
+  // 4. Attachment
+  let attachStr = '';
+  switch (attach) {
+    case 'loop':
+      attachStr = 'featuring a polished golden jump ring hanging loop securely attached at the very top center';
+      break;
+    case 'beads':
+      attachStr = 'suspended from a fine golden cord threaded with miniature evil eye protective beads and a top attachment loop';
+      break;
+    case 'clean':
+      attachStr = 'with a clean circular mounting hole at the top edge';
+      break;
+  }
+
+  // Full Prompt Assembly
+  const fullPrompt = `${subjectStr}, ${styleStr}, ${attachStr}, ${formatStr}, perfectly centered composition, clean edges, isolated on pure transparent background, no shadow clipping, PNG format --no background, --v 6.0`;
+
+  promptOutputText.textContent = fullPrompt;
+}
+
 // Start
 init();
+

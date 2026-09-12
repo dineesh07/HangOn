@@ -1,10 +1,10 @@
-# Lucky Dangle — Project Overview & Technical Architecture
+# Hang On — Project Overview & Technical Architecture
 
 ## 1. Project Vision & Purpose
 
-**Lucky Dangle** is a lightweight, interactive desktop companion and physics-driven talisman application for Windows. It hangs a charming, animated lucky talisman from the top-right corner of your desktop (or custom position) with realistic 2D spring-pendulum physics, customizable threads, multi-sound blessing rituals, and instant system tray quick access.
+**Hang On** is a lightweight, interactive desktop companion and physics-driven talisman application for Windows. It hangs a charming, animated lucky talisman from the top-right corner of your desktop (or custom position) with realistic 2D spring-pendulum physics, customizable threads, multi-sound blessing rituals, and instant system tray quick access.
 
-Whether you treat it as an **Evil Eye (Nazar Amulet)** for warding off bugs and project manager inquiries, a **Maneki-Neko** for prosperity, or your own custom uploaded company logo, Lucky Dangle provides delight and tactile physics without ever interfering with your normal desktop workflow.
+Whether you treat it as an **Evil Eye (Nazar Amulet)** for warding off bugs and project manager inquiries, a **Maneki-Neko** for prosperity, or your own custom uploaded company logo, Hang On provides delight and tactile physics without ever interfering with your normal desktop workflow.
 
 ---
 
@@ -34,7 +34,7 @@ Whether you treat it as an **Evil Eye (Nazar Amulet)** for warding off bugs and 
   - Add custom charm dialog
   - Hanging length presets (Short 50px, Medium 90px, Long 150px)
   - Charm size presets (Small 80px, Medium 110px, Large 150px)
-  - Blessing Ritual shortcut (`Ctrl + S`)
+  - Blessing Ritual shortcut (`Ctrl + Q`)
   - Settings & Customizer launcher
   - Quit
 - **Dynamic Taskbar & Tray Icon**: Automatically reflects the active charm image.
@@ -74,17 +74,11 @@ lucky-dangle/
 └── README.md                  # Project documentation
 ```
 
-### Key Libraries & APIs:
-- **Electron 31**: Desktop runtime providing native window management, system tray, transparent screen overlays, global shortcuts, and file dialogs.
-- **Web Audio API**: Real-time frequency synthesis for audio effects.
-- **Outfit Google Font**: Clean typography for the minimal light theme UI.
-- **Vanilla CSS3 & SVG**: High-performance hardware-accelerated animations and resolution-independent vector graphics.
-
 ---
 
 ## 4. Configuration Schema (`dangle-config.json`)
 
-Stored in `%APPDATA%/my-lucky-dangle/dangle-config.json`:
+Stored in `%APPDATA%/hang-on/dangle-config.json`:
 
 ```json
 {
@@ -107,5 +101,5 @@ Stored in `%APPDATA%/my-lucky-dangle/dangle-config.json`:
 ## 5. Keyboard Shortcuts & Protocol Handlers
 
 - **`Ctrl + D`**: Toggle Show / Hide overlay
-- **`Ctrl + S`**: Trigger Blessing ritual (pulse glow, sparkles, and synthesized chime)
-- **Protocol URI**: `luckydangle://bless` (can be triggered from terminal, scripts, or git commit hooks via `start luckydangle://bless`)
+- **`Ctrl + Q`**: Trigger Blessing ritual (pulse glow, sparkles, and synthesized chime)
+- **Protocol URI**: `hangon://bless` (can be triggered from terminal, scripts, or git commit hooks via `start hangon://bless`)
