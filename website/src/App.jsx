@@ -125,7 +125,6 @@ export default function App() {
           <li><a href="#features">Features</a></li>
           <li><a href="#gallery">Charms</a></li>
           <li><a href="#settings">Customizer</a></li>
-          <li><a href="#scripts">Shortcuts</a></li>
         </ul>
 
         <div className="nav-actions">
@@ -365,22 +364,8 @@ export default function App() {
               </button>
             </div>
 
-            {/* Right: Clickable Grid + Upload Custom Card */}
+            {/* Right: Clickable Grid */}
             <div className="gallery-grid">
-              
-              {/* Upload Card */}
-              <div
-                onClick={() => fileInputRef.current?.click()}
-                className="charm-card upload-charm-card"
-                title="Upload custom PNG/GIF image"
-              >
-                <div className="charm-preview-wrap bg-cyan">
-                  <Plus size={28} color="#0284c7" />
-                </div>
-                <div className="charm-name" style={{ color: '#0284c7' }}>Upload PNG</div>
-              </div>
-
-              {/* Charm List */}
               {charmsList.map((c) => {
                 const isActive = c.id === activeCharm.id;
                 return (
@@ -427,6 +412,12 @@ export default function App() {
                 Adjust cord length, dangle size, elastic stiffness, and oscillation damping directly from the floating settings window or system tray menu.
               </p>
               <ul>
+                <li>
+                  <span className="icon-badge">
+                    <ImageIcon size={15} />
+                  </span>
+                  <span><strong>Custom Charms:</strong> Add and hang your own custom PNG, GIF, or SVG talisman images.</span>
+                </li>
                 <li>
                   <span className="icon-badge">
                     <MapPin size={15} />
@@ -510,42 +501,6 @@ export default function App() {
               </div>
             </div>
 
-          </div>
-        </div>
-      </section>
-
-      {/* Developer Shortcuts Section */}
-      <section className="section" id="scripts">
-        <div className="container">
-          <div className="script-callout-card">
-            <div className="script-content">
-              <span className="badge badge-pink" style={{ marginBottom: '12px' }}>
-                <Zap size={14} />
-                Developer Superpowers
-              </span>
-              <h3>Summon blessings directly from your terminal.</h3>
-              <p>
-                Trigger the blessing ritual automatically when your unit tests pass, after deploying code, or after a successful git commit using the custom protocol URI.
-              </p>
-            </div>
-
-            <div className="terminal-box">
-              <div className="terminal-line">
-                <span>Terminal / Git Hook</span>
-                <button onClick={handleCopyCmd} className="copy-btn">
-                  {copied ? 'Copied!' : 'Copy'}
-                </button>
-              </div>
-              <div className="terminal-cmd">
-                <code>git push && start hangon://bless</code>
-              </div>
-              <div style={{ fontSize: '0.82rem', color: '#94a3b8', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '10px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <span>Keyboard Shortcut:</span>
-                <span className="kbd-badge" style={{ background: 'rgba(255,255,255,0.2)', color: '#fff', borderColor: 'rgba(255,255,255,0.3)', boxShadow: 'none' }}>Ctrl</span> + 
-                <span className="kbd-badge" style={{ background: 'rgba(255,255,255,0.2)', color: '#fff', borderColor: 'rgba(255,255,255,0.3)', boxShadow: 'none' }}>Q</span>
-                <span>anywhere in Windows</span>
-              </div>
-            </div>
           </div>
         </div>
       </section>
