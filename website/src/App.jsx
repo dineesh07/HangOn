@@ -526,16 +526,7 @@ export default function App() {
                 className="btn btn-primary btn-lg"
               >
                 <Download size={20} />
-                Download Installer (.exe)
-              </a>
-
-              <a
-                href={`${BASE}downloads/Hang-On-Portable.exe`}
-                download="Hang-On-Portable.exe"
-                className="btn btn-secondary btn-lg"
-              >
-                <Zap size={20} />
-                Download Portable (.exe)
+                Download for Windows (.exe)
               </a>
             </div>
 
