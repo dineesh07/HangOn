@@ -1,8 +1,7 @@
-# Lucky Dangle
+# Hang On
 
 A desktop talisman and physics charm that hangs gracefully from the top-right corner of your screen on Windows.
 
-![Evil Eye Preview](assets/charms/evil-eye.svg)
 
 ---
 
