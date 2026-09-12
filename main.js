@@ -1,11 +1,31 @@
 const { app, BrowserWindow, Tray, Menu, screen, globalShortcut, ipcMain, nativeImage, dialog, shell } = require('electron');
 const path = require('path');
 const fs = require('fs');
+
+process.on('uncaughtException', (err) => {
+  try {
+    fs.appendFileSync(path.join(__dirname, 'app_debug.log'), `UncaughtException: ${err && err.stack ? err.stack : err}\n`);
+  } catch (e) {}
+});
+
+process.on('unhandledRejection', (reason) => {
+  try {
+    fs.appendFileSync(path.join(__dirname, 'app_debug.log'), `UnhandledRejection: ${reason && reason.stack ? reason.stack : reason}\n`);
+  } catch (e) {}
+});
+
 const { ConfigStore, PRESET_CHARMS } = require('./configStore');
+
+app.name = 'hang-on';
+app.setAppUserModelId('com.hangon.app');
 
 // Single instance lock
 const gotLock = app.requestSingleInstanceLock();
 if (!gotLock) {
+  try {
+    fs.writeFileSync(path.join(__dirname, 'app_debug.log'), `Single instance lock failed at ${new Date().toISOString()}\n`);
+  } catch (e) {}
+  console.log('Could not acquire single instance lock, quitting.');
   app.quit();
   process.exit(0);
 }
@@ -63,15 +83,24 @@ function createOverlayWindow() {
     },
   });
 
-  win.setAlwaysOnTop(true, 'screen-saver');
-  win.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true });
+  win.setAlwaysOnTop(true);
+  try {
+    if (process.platform === 'darwin') {
+      win.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true });
+    }
+  } catch (e) {}
   win.loadFile(path.join(__dirname, 'renderer', 'index.html'));
 
   win.webContents.on('did-finish-load', () => {
+    fs.appendFileSync(path.join(__dirname, 'app_debug.log'), `Renderer did-finish-load\n`);
     syncConfigToWindows();
     if (config.enabled) {
       win.showInactive();
     }
+  });
+
+  win.webContents.on('did-fail-load', (e, code, desc) => {
+    fs.appendFileSync(path.join(__dirname, 'app_debug.log'), `Renderer did-fail-load: ${code} ${desc}\n`);
   });
 
   win.setIgnoreMouseEvents(true, { forward: true });
@@ -87,7 +116,6 @@ function updateOverlayBounds() {
 function getAppIcon() {
   const icoPath = path.join(__dirname, 'assets', 'icon.ico');
   const pngPath = path.join(__dirname, 'assets', 'icon.png');
-  const trayPath = path.join(__dirname, 'assets', 'tray-icon.png');
   if (fs.existsSync(icoPath)) {
     const img = nativeImage.createFromPath(icoPath);
     if (!img.isEmpty()) return img;
@@ -96,9 +124,24 @@ function getAppIcon() {
     const img = nativeImage.createFromPath(pngPath);
     if (!img.isEmpty()) return img;
   }
+  return nativeImage.createEmpty();
+}
+
+function getTrayIcon() {
+  const trayPath = path.join(__dirname, 'assets', 'tray-icon.png');
+  const icoPath = path.join(__dirname, 'assets', 'icon.ico');
+  const pngPath = path.join(__dirname, 'assets', 'icon.png');
   if (fs.existsSync(trayPath)) {
     const img = nativeImage.createFromPath(trayPath);
     if (!img.isEmpty()) return img;
+  }
+  if (fs.existsSync(icoPath)) {
+    const img = nativeImage.createFromPath(icoPath);
+    if (!img.isEmpty()) return img;
+  }
+  if (fs.existsSync(pngPath)) {
+    const img = nativeImage.createFromPath(pngPath);
+    if (!img.isEmpty()) return img.resize({ width: 16, height: 16 });
   }
   return nativeImage.createEmpty();
 }
@@ -321,8 +364,8 @@ function updateTrayMenu() {
 }
 
 function createTray() {
-  const icon = getAppIcon();
-  tray = new Tray(icon.isEmpty() ? nativeImage.createEmpty() : icon.resize({ width: 16, height: 16 }));
+  const icon = getTrayIcon();
+  tray = new Tray(icon);
   tray.setToolTip('Hang On - Click to toggle');
 
   // Single left-click toggles Enable / Disable
@@ -423,16 +466,20 @@ ipcMain.handle('open-settings', () => {
 });
 
 app.whenReady().then(() => {
-  app.setAppUserModelId('com.hangon.app');
-  configStore = new ConfigStore();
-  createOverlayWindow();
-  createTray();
-  registerShortcuts();
+  try {
+    configStore = new ConfigStore();
+    createOverlayWindow();
+    createTray();
+    registerShortcuts();
+  } catch (err) {
+    console.error('Error starting Hang On:', err);
+  }
+}).catch((err) => {
+  console.error('Unhandled rejection in whenReady:', err);
 });
 
-app.on('window-all-closed', (e) => {
-  // Keep alive in tray
-  e.preventDefault();
+app.on('window-all-closed', () => {
+  // Keep alive in tray - do not call app.quit()
 });
 
 app.on('will-quit', () => {
