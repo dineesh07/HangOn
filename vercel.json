@@ -1,4 +1,4 @@
 {
-  "outputDirectory": "website",
-  "cleanUrls": true
+  "buildCommand": "cd website && npm install && npm run build",
+  "outputDirectory": "website/dist"
 }

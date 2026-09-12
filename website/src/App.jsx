@@ -1,0 +1,580 @@
+import React, { useState, useEffect, useRef } from 'react';
+import HangingCharm from './components/HangingCharm';
+import { playBlessingSound } from './audio';
+import {
+  Sparkles,
+  Download,
+  Bell,
+  Copy,
+  Check,
+  Shield,
+  Heart,
+  Monitor,
+  Sliders,
+  Keyboard,
+  MousePointer,
+  Activity,
+  Layers,
+  MapPin,
+  Scale,
+  Package,
+  Zap,
+} from 'lucide-react';
+
+const CHARMS = [
+  { id: 'evil-eye', name: 'Nazar Evil Eye', file: 'evil-eye.svg', bg: 'bg-cyan', blessing: 'Wards off bugs & workspace chaos' },
+  { id: 'lucky-cat', name: 'Maneki-Neko', file: 'lucky-cat.svg', bg: 'bg-gold', blessing: 'Prosperity & serendipity' },
+  { id: 'gold-coin', name: 'Feng Shui Coin', file: 'gold-coin.svg', bg: 'bg-gold', blessing: 'Abundance & financial fortune' },
+  { id: 'lucky-clover', name: 'Emerald Clover', file: 'lucky-clover.svg', bg: 'bg-mint', blessing: 'Serendipitous breakthroughs' },
+  { id: 'mystic-crystal', name: 'Celestial Crystal', file: 'mystic-crystal.svg', bg: 'bg-lavender', blessing: 'Deep focus & mental clarity' },
+  { id: 'frangipani', name: 'Frangipani', file: 'frangipani.png', bg: 'bg-pink', blessing: 'Calm tranquility & renewal' },
+  { id: 'beluga-cat', name: 'Beluga Cat', file: 'beluga-cat.png', bg: 'bg-cyan', blessing: 'Wholesome humor & smiles' },
+  { id: 'beast-boy', name: 'Beast Boy', file: 'beast-boy.png', bg: 'bg-mint', blessing: 'High energy & resilience' },
+  { id: 'master-jd', name: 'Master JD', file: 'master-jd.png', bg: 'bg-gold', blessing: 'Mastery & steady leadership' },
+  { id: 'sunflower', name: 'Sunflower', file: 'sunflower.png', bg: 'bg-gold', blessing: 'Joy, brightness & optimism' },
+];
+
+export default function App() {
+  const [activeCharm, setActiveCharm] = useState(CHARMS[0]);
+  const [copied, setCopied] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
+
+  // Global Ctrl + Q shortcut listener
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if ((e.ctrlKey || e.metaKey) && (e.key === 'q' || e.key === 'Q')) {
+        e.preventDefault();
+        triggerBlessing();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  const triggerBlessing = () => {
+    playBlessingSound();
+    setToastMessage('Blessing Ritual Triggered! (Ctrl + Q)');
+    setTimeout(() => {
+      setToastMessage('');
+    }, 2400);
+  };
+
+  const handleCopyCmd = () => {
+    navigator.clipboard.writeText('git push && start hangon://bless').then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2200);
+    });
+  };
+
+  return (
+    <div className="min-h-screen">
+      
+      {/* Toast Notification for Ctrl+Q */}
+      {toastMessage && (
+        <div className="blessing-toast">
+          <Sparkles size={18} className="text-amber-300" />
+          <span>{toastMessage}</span>
+        </div>
+      )}
+
+      {/* Sticky Navbar */}
+      <nav className="navbar">
+        <a href="#" className="nav-brand">
+          <img src="/assets/icon.png" alt="Hang On" className="nav-logo-icon" />
+          <span>Hang On</span>
+        </a>
+        
+        <ul className="nav-links">
+          <li><a href="#features">Features</a></li>
+          <li><a href="#gallery">Charms</a></li>
+          <li><a href="#settings">Customizer</a></li>
+          <li><a href="#scripts">Shortcuts</a></li>
+        </ul>
+
+        <div className="nav-actions">
+          <a
+            href="https://github.com/dineesh07/HangOn"
+            target="_blank"
+            rel="noreferrer"
+            className="btn btn-secondary"
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+            </svg>
+            GitHub
+          </a>
+          <a href="#download" className="btn btn-primary">
+            Download v1.0.0
+          </a>
+        </div>
+      </nav>
+
+      {/* Hero Section */}
+      <section className="hero">
+        <div className="container">
+          <div className="hero-grid">
+            
+            {/* Left: Headline & Pitch */}
+            <div className="hero-content">
+              <div>
+                <span className="badge badge-mint">
+                  <Sparkles size={14} />
+                  Cozy Desktop Magic
+                </span>
+              </div>
+
+              <h1 className="hero-title">
+                Hang something <span className="highlight">lucky</span> from your screen.
+              </h1>
+
+              <p className="hero-desc">
+                A free, gentle desktop talisman for Windows that swings with realistic pendulum physics, plays procedural crystal chimes, and stays completely click-through so it never gets in your way.
+              </p>
+
+              <div className="hero-ctas">
+                <a
+                  href="/downloads/Hang-On-Setup-1.0.0.exe"
+                  download="Hang-On-Setup-1.0.0.exe"
+                  className="btn btn-primary btn-lg"
+                >
+                  <Download size={20} />
+                  Download for Windows (.exe)
+                </a>
+                <a href="#features" className="btn btn-secondary btn-lg">
+                  See How It Works
+                </a>
+              </div>
+
+              {/* Shortcut Banner */}
+              <div className="shortcut-pill-banner">
+                <Keyboard size={16} className="text-sky-600" />
+                <span>Blessing Ritual:</span>
+                <span className="kbd-badge">Ctrl</span> + <span className="kbd-badge">Q</span>
+                <span style={{ color: '#cbd5e1' }}>•</span>
+                <span>Toggle View:</span>
+                <span className="kbd-badge">Ctrl</span> + <span className="kbd-badge">D</span>
+              </div>
+
+              {/* Meta Notes */}
+              <div className="hero-notes">
+                <span>
+                  <Monitor size={15} />
+                  Windows 10 & 11 (64-bit)
+                </span>
+                <span>•</span>
+                <span>
+                  <Heart size={15} />
+                  100% Free & Open Source
+                </span>
+                <span>•</span>
+                <span>
+                  <Shield size={15} />
+                  Zero Tracking
+                </span>
+              </div>
+            </div>
+
+            {/* Right: Interactive Live Simulation Rig */}
+            <div className="hero-stage-card">
+              <div className="hero-stage-header">
+                <div className="stage-title">
+                  <span className="stage-pulse" />
+                  Live Physics Preview
+                </div>
+                <span className="badge badge-gold">
+                  <MousePointer size={13} />
+                  Try dragging it
+                </span>
+              </div>
+
+              <div className="hero-canvas-wrapper" id="hero-stage">
+                {/* Code editor background lines for click-through visualization */}
+                <div className="canvas-backdrop">
+                  <div className="mock-line short" />
+                  <div className="mock-line long" />
+                  <div className="mock-line med" />
+                  <div className="mock-line long" />
+                  <div className="mock-line short" />
+                </div>
+
+                {/* React 2D Spring Physics Rig */}
+                <HangingCharm
+                  charmSrc={`/assets/charms/${activeCharm.file}`}
+                  charmName={activeCharm.name}
+                  size={110}
+                  restLen={100}
+                  hasBeads={true}
+                  interactive={true}
+                  onBless={() => triggerBlessing()}
+                />
+              </div>
+
+              <div className="stage-instructions">
+                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                  <MousePointer size={14} />
+                  Click or fling to test 2D spring momentum
+                </span>
+                <div className="stage-buttons">
+                  <button onClick={triggerBlessing} className="btn-icon-pill">
+                    <Bell size={14} />
+                    Ring Chime (Ctrl+Q)
+                  </button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* Features Grid */}
+      <section className="section" id="features">
+        <div className="container">
+          <div className="section-header">
+            <span className="badge badge-cyan">
+              <Activity size={14} />
+              Crafted for Peace of Mind
+            </span>
+            <h2 className="section-title">Designed to charm, never to distract.</h2>
+            <p className="section-subtitle">
+              Hang On brings tactile physics and good fortune to your workspace without demanding your attention or slowing down your PC.
+            </p>
+          </div>
+
+          <div className="features-grid">
+            
+            {/* Feature 1 */}
+            <div className="feature-card">
+              <div className="feature-icon-box">
+                <Activity size={26} />
+              </div>
+              <h3>2D Spring-Pendulum Physics</h3>
+              <p>
+                Simulates rotational gravity, air damping, and elastic rubber-band stretching. Drag left or right and release to watch it oscillate with natural momentum.
+              </p>
+            </div>
+
+            {/* Feature 2 */}
+            <div className="feature-card">
+              <div className="feature-icon-box">
+                <Layers size={26} />
+              </div>
+              <h3>100% Click-Through</h3>
+              <p>
+                Never interrupts your workflow. Mouse clicks automatically pass right through to your code editor, browser, or games underneath unless you grab the charm directly.
+              </p>
+            </div>
+
+            {/* Feature 3 */}
+            <div className="feature-card">
+              <div className="feature-icon-box">
+                <Bell size={26} />
+              </div>
+              <h3>Procedural Ambient Chimes</h3>
+              <p>
+                Five warm harmonic audio modes synthesized in real-time via the Web Audio API (Singing Bowl, Crystal Cascade, Mystic Harp, Wind Chimes). Zero audio file overhead.
+              </p>
+            </div>
+
+            {/* Feature 4 */}
+            <div className="feature-card">
+              <div className="feature-icon-box">
+                <Sliders size={26} />
+              </div>
+              <h3>Custom Uploads & Customizer</h3>
+              <p>
+                Choose from handcrafted talismans or upload any custom PNG, animated GIF, or SVG (like your team logo or favorite mascot) with instant live preview.
+              </p>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* Charm Gallery Section with Inline Spotlight Preview */}
+      <section className="section gallery-section" id="gallery">
+        <div className="container">
+          <div className="section-header">
+            <span className="badge badge-lavender">
+              <Sparkles size={14} />
+              Built-In Talisman Collection
+            </span>
+            <h2 className="section-title">Find the charm that matches your vibe.</h2>
+            <p className="section-subtitle">
+              Click any talisman below to see its instant live physics preview and blessing description right here!
+            </p>
+          </div>
+
+          <div className="gallery-layout">
+            
+            {/* Left: Interactive Gallery Spotlight Card */}
+            <div className="gallery-spotlight-card">
+              <div style={{ fontFamily: 'var(--font-accent)', fontSize: '0.8rem', fontWeight: 700, color: '#64748b', textTransform: 'uppercase' }}>
+                Selected Charm Spotlight
+              </div>
+
+              <div className="spotlight-canvas-area">
+                <HangingCharm
+                  charmSrc={`/assets/charms/${activeCharm.file}`}
+                  charmName={activeCharm.name}
+                  size={90}
+                  restLen={80}
+                  hasBeads={true}
+                  interactive={true}
+                  onBless={() => triggerBlessing()}
+                />
+              </div>
+
+              <div className="spotlight-info">
+                <div className="spotlight-title">{activeCharm.name}</div>
+                <div className="spotlight-blessing">{activeCharm.blessing}</div>
+              </div>
+
+              <button onClick={triggerBlessing} className="btn btn-secondary" style={{ width: '100%' }}>
+                <Sparkles size={16} />
+                Bless Now (Ctrl + Q)
+              </button>
+            </div>
+
+            {/* Right: Clickable Grid */}
+            <div className="gallery-grid">
+              {CHARMS.map((c) => {
+                const isActive = c.id === activeCharm.id;
+                return (
+                  <div
+                    key={c.id}
+                    onClick={() => {
+                      setActiveCharm(c);
+                      playBlessingSound();
+                    }}
+                    className={`charm-card ${isActive ? 'active' : ''}`}
+                  >
+                    <div className={`charm-preview-wrap ${c.bg}`}>
+                      <img
+                        src={`/assets/charms/${c.file}`}
+                        alt={c.name}
+                        className="charm-preview-img"
+                      />
+                    </div>
+                    <div className="charm-name">{c.name}</div>
+                  </div>
+                );
+              })}
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* Settings & Customizer Section */}
+      <section className="section" id="settings">
+        <div className="container">
+          <div className="settings-preview-wrap">
+            
+            <div className="settings-pitch">
+              <span className="badge badge-gold">
+                <Sliders size={14} />
+                Full Control
+              </span>
+              <h2 className="section-title">Fine-tune every stitch and swing.</h2>
+              <p className="section-subtitle">
+                Adjust cord length, dangle size, elastic stiffness, and oscillation damping directly from the floating settings window or system tray menu.
+              </p>
+              <ul>
+                <li>
+                  <span className="icon-badge">
+                    <MapPin size={15} />
+                  </span>
+                  <span><strong>3 Screen Anchor Points:</strong> Top-Right, Top-Center, or Top-Left.</span>
+                </li>
+                <li>
+                  <span className="icon-badge">
+                    <Sliders size={15} />
+                  </span>
+                  <span><strong>Flexible Dimensions:</strong> Length from 50px to 150px, size from 80px to 150px.</span>
+                </li>
+                <li>
+                  <span className="icon-badge">
+                    <Zap size={15} />
+                  </span>
+                  <span><strong>Custom Physics:</strong> From ultra-springy to calm Zen pendulum.</span>
+                </li>
+                <li>
+                  <span className="icon-badge">
+                    <Check size={15} />
+                  </span>
+                  <span><strong>Launch on Boot:</strong> Automatically start alongside Windows.</span>
+                </li>
+              </ul>
+            </div>
+
+            {/* Mockup Window */}
+            <div className="mockup-window">
+              <div className="mockup-header">
+                <div className="mockup-dots">
+                  <div className="mockup-dot red" />
+                  <div className="mockup-dot yellow" />
+                  <div className="mockup-dot green" />
+                </div>
+                <div className="mockup-title">Hang On Settings & Customizer</div>
+                <div style={{ width: '30px' }} />
+              </div>
+
+              <div className="mockup-body">
+                <div className="mockup-row">
+                  <div className="mockup-row-header">
+                    <span>Hanging Cord Length</span>
+                    <span style={{ color: '#0284c7' }}>90 px</span>
+                  </div>
+                  <div className="mockup-slider">
+                    <div className="mockup-slider-fill" style={{ width: '55%' }} />
+                    <div className="mockup-slider-thumb" style={{ left: '55%' }} />
+                  </div>
+                </div>
+
+                <div className="mockup-row">
+                  <div className="mockup-row-header">
+                    <span>Talisman Size</span>
+                    <span style={{ color: '#0284c7' }}>110 px</span>
+                  </div>
+                  <div className="mockup-slider">
+                    <div className="mockup-slider-fill" style={{ width: '60%' }} />
+                    <div className="mockup-slider-thumb" style={{ left: '60%' }} />
+                  </div>
+                </div>
+
+                <div className="mockup-row">
+                  <div className="mockup-row-header">
+                    <span>Swing Elasticity</span>
+                    <span style={{ color: '#0284c7' }}>10.0</span>
+                  </div>
+                  <div className="mockup-slider">
+                    <div className="mockup-slider-fill" style={{ width: '50%' }} />
+                    <div className="mockup-slider-thumb" style={{ left: '50%' }} />
+                  </div>
+                </div>
+
+                <div className="mockup-toggles">
+                  <div>
+                    <div style={{ fontWeight: 700, color: '#1e293b', fontSize: '0.92rem' }}>Harmonic Blessing Chimes</div>
+                    <div style={{ fontSize: '0.8rem', color: '#64748b' }}>Procedural audio on ritual trigger</div>
+                  </div>
+                  <div className="mockup-switch" />
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* Developer Shortcuts Section */}
+      <section className="section" id="scripts">
+        <div className="container">
+          <div className="script-callout-card">
+            <div className="script-content">
+              <span className="badge badge-pink" style={{ marginBottom: '12px' }}>
+                <Zap size={14} />
+                Developer Superpowers
+              </span>
+              <h3>Summon blessings directly from your terminal.</h3>
+              <p>
+                Trigger the blessing ritual automatically when your unit tests pass, after deploying code, or after a successful git commit using the custom protocol URI.
+              </p>
+            </div>
+
+            <div className="terminal-box">
+              <div className="terminal-line">
+                <span>Terminal / Git Hook</span>
+                <button onClick={handleCopyCmd} className="copy-btn">
+                  {copied ? 'Copied!' : 'Copy'}
+                </button>
+              </div>
+              <div className="terminal-cmd">
+                <code>git push && start hangon://bless</code>
+              </div>
+              <div style={{ fontSize: '0.82rem', color: '#94a3b8', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '10px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <span>Keyboard Shortcut:</span>
+                <span className="kbd-badge" style={{ background: 'rgba(255,255,255,0.2)', color: '#fff', borderColor: 'rgba(255,255,255,0.3)', boxShadow: 'none' }}>Ctrl</span> + 
+                <span className="kbd-badge" style={{ background: 'rgba(255,255,255,0.2)', color: '#fff', borderColor: 'rgba(255,255,255,0.3)', boxShadow: 'none' }}>Q</span>
+                <span>anywhere in Windows</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Download Section */}
+      <section className="section download-section" id="download">
+        <div className="container">
+          <div className="download-card">
+            <img src="/assets/icon.png" alt="Hang On App Icon" className="download-icon" />
+
+            <div>
+              <h2 className="section-title">Ready to hang something lucky?</h2>
+              <p className="section-subtitle" style={{ marginTop: '8px' }}>
+                Get Hang On for Windows today. Free, open-source, and lightweight.
+              </p>
+            </div>
+
+            <div className="download-buttons">
+              <a
+                href="/downloads/Hang-On-Setup-1.0.0.exe"
+                download="Hang-On-Setup-1.0.0.exe"
+                className="btn btn-primary btn-lg"
+              >
+                <Download size={20} />
+                Download Installer (.exe)
+              </a>
+
+              <a
+                href="/downloads/Hang-On-Portable.exe"
+                download="Hang-On-Portable.exe"
+                className="btn btn-secondary btn-lg"
+              >
+                <Zap size={20} />
+                Download Portable (.exe)
+              </a>
+            </div>
+
+            <div className="download-meta">
+              <span>
+                <Package size={15} />
+                Version 1.0.0
+              </span>
+              <span>•</span>
+              <span>
+                <Monitor size={15} />
+                Windows 10 & 11 (64-bit)
+              </span>
+              <span>•</span>
+              <span>
+                <Scale size={15} />
+                MIT License
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="footer">
+        <div className="footer-tagline">
+          Made with quiet magic for your desktop.
+        </div>
+        <div className="footer-links">
+          <a href="https://github.com/dineesh07/HangOn" target="_blank" rel="noreferrer">GitHub Repository</a>
+          <span>•</span>
+          <a href="https://github.com/dineesh07/HangOn/releases" target="_blank" rel="noreferrer">Releases & Changelog</a>
+          <span>•</span>
+          <a href="https://github.com/dineesh07/HangOn/blob/main/LICENSE" target="_blank" rel="noreferrer">MIT License</a>
+        </div>
+        <div style={{ fontSize: '0.8rem', color: '#94a3b8', marginTop: '4px' }}>
+          Hang On © 2026 Dineesh. All rights reserved.
+        </div>
+      </footer>
+
+    </div>
+  );
+}
