@@ -253,10 +253,17 @@ a {
 }
 
 .hero-title {
-  font-size: 3.6rem;
-  line-height: 1.08;
-  letter-spacing: -0.03em;
+  font-size: clamp(2.35rem, 3.8vw, 3.15rem);
+  line-height: 1.15;
+  letter-spacing: -0.025em;
   color: #111827;
+  font-weight: 800;
+}
+
+.hero-punchline {
+  display: block;
+  margin-top: 6px;
+  color: #1e293b;
 }
 
 .hero-title .highlight {

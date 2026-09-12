@@ -96,7 +96,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen">
-      
+
       {/* Toast Notification for Ctrl+Q */}
       {toastMessage && (
         <div className="blessing-toast">
@@ -120,7 +120,7 @@ export default function App() {
           <img src={`${BASE}assets/icon.png`} alt="Hang On" className="nav-logo-icon" />
           <span>Hang On</span>
         </a>
-        
+
         <ul className="nav-links">
           <li><a href="#features">Features</a></li>
           <li><a href="#gallery">Charms</a></li>
@@ -135,7 +135,7 @@ export default function App() {
             className="btn btn-secondary"
           >
             <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+              <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
             </svg>
             GitHub
           </a>
@@ -149,10 +149,11 @@ export default function App() {
       <section className="hero">
         <div className="container">
           <div className="hero-grid">
-            
+
             <div className="hero-content">
               <h1 className="hero-title">
-                Hang something <span className="highlight">lucky</span> from your screen. Or don't. We're not your mom.
+                Hang something <span className="highlight">LUCKY</span> from your screen.
+                <span className="hero-punchline">Or don't. We're not your MOM!!</span>
               </h1>
 
               <p className="hero-desc">
@@ -270,7 +271,7 @@ export default function App() {
           </div>
 
           <div className="features-grid">
-            
+
             {/* Feature 1 */}
             <div className="feature-card">
               <div className="feature-icon-box">
@@ -334,7 +335,7 @@ export default function App() {
           </div>
 
           <div className="gallery-layout">
-            
+
             {/* Left: Interactive Gallery Spotlight Card */}
             <div className="gallery-spotlight-card">
               <div style={{ fontFamily: 'var(--font-accent)', fontSize: '0.8rem', fontWeight: 700, color: '#64748b', textTransform: 'uppercase' }}>
@@ -401,7 +402,7 @@ export default function App() {
       <section className="section" id="settings">
         <div className="container">
           <div className="settings-preview-wrap">
-            
+
             <div className="settings-pitch">
               <span className="badge badge-gold">
                 <Sliders size={14} />
@@ -563,8 +564,16 @@ export default function App() {
         <div className="footer-tagline">
           Built instead of touching some grass.
         </div>
-        <div style={{ fontSize: '0.92rem', color: '#475569', fontWeight: 600 }}>
-          Made by Dineesh · Unfortunately, there’s more <a href="https://dineeshm.vercel.app/" target="_blank" rel="noreferrer" style={{ color: '#0284c7', textDecoration: 'underline', fontWeight: 700 }}>Click here</a>
+        <div style={{ fontSize: '0.95rem', color: '#475569', fontWeight: 600 }}>
+          Made by Dineesh · Unfortunately, there’s more{' '}
+          <a
+            href="https://dineeshm.vercel.app/"
+            target="_blank"
+            rel="noreferrer"
+            style={{ color: '#0284c7', textDecoration: 'underline', fontWeight: 700 }}
+          >
+            Click here
+          </a>
         </div>
         <div className="footer-links">
           <a href="https://github.com/dineesh07/HangOn" target="_blank" rel="noreferrer">GitHub Repository</a>
