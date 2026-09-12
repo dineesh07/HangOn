@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="100%" height="100%">
+  <defs>
+    <radialGradient id="emeraldLeaf" cx="35%" cy="30%" r="70%">
+      <stop offset="0%" stop-color="#86efac"/>
+      <stop offset="30%" stop-color="#22c55e"/>
+      <stop offset="75%" stop-color="#15803d"/>
+      <stop offset="100%" stop-color="#052e16"/>
+    </radialGradient>
+    <linearGradient id="goldStem" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fef08a"/>
+      <stop offset="100%" stop-color="#a16207"/>
+    </linearGradient>
+  </defs>
+
+  <g transform="translate(0, 5)">
+    <!-- Top Attachment Loop -->
+    <circle cx="100" cy="18" r="8" fill="none" stroke="url(#goldStem)" stroke-width="3.5"/>
+
+    <!-- Stem -->
+    <path d="M 100,105 Q 100,158 116,176 Q 110,179 96,162 Q 96,112 100,105 Z" fill="url(#emeraldLeaf)"/>
+
+    <!-- 4 Heart Shaped Clover Leaves -->
+    <g transform="translate(100, 105) rotate(0) translate(-100, -100)">
+      <path d="M 100,100 C 72,64 54,44 76,26 C 94,12 100,38 100,48 C 100,38 106,12 124,26 C 146,44 128,64 100,100 Z" fill="url(#emeraldLeaf)"/>
+      <path d="M 100,100 L 100,48" stroke="#bbf7d0" stroke-width="1.2" opacity="0.6"/>
+    </g>
+
+    <g transform="translate(100, 105) rotate(90) translate(-100, -100)">
+      <path d="M 100,100 C 72,64 54,44 76,26 C 94,12 100,38 100,48 C 100,38 106,12 124,26 C 146,44 128,64 100,100 Z" fill="url(#emeraldLeaf)"/>
+      <path d="M 100,100 L 100,48" stroke="#bbf7d0" stroke-width="1.2" opacity="0.6"/>
+    </g>
+
+    <g transform="translate(100, 105) rotate(180) translate(-100, -100)">
+      <path d="M 100,100 C 72,64 54,44 76,26 C 94,12 100,38 100,48 C 100,38 106,12 124,26 C 146,44 128,64 100,100 Z" fill="url(#emeraldLeaf)"/>
+      <path d="M 100,100 L 100,48" stroke="#bbf7d0" stroke-width="1.2" opacity="0.6"/>
+    </g>
+
+    <g transform="translate(100, 105) rotate(270) translate(-100, -100)">
+      <path d="M 100,100 C 72,64 54,44 76,26 C 94,12 100,38 100,48 C 100,38 106,12 124,26 C 146,44 128,64 100,100 Z" fill="url(#emeraldLeaf)"/>
+      <path d="M 100,100 L 100,48" stroke="#bbf7d0" stroke-width="1.2" opacity="0.6"/>
+    </g>
+
+    <!-- Dew Drops -->
+    <circle cx="96" cy="62" r="3.5" fill="#fef08a" opacity="0.9"/>
+    <circle cx="94" cy="60" r="1.2" fill="#ffffff"/>
+    <circle cx="136" cy="98" r="3" fill="#fef08a" opacity="0.9"/>
+
+    <!-- Center Pistil -->
+    <circle cx="100" cy="105" r="6" fill="#fde047" stroke="#ca8a04" stroke-width="1.2"/>
+  </g>
+</svg>

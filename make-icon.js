@@ -1,0 +1,9 @@
+const fs = require('fs');
+const path = require('path');
+
+// 32x32 base64 PNG of a crisp glowing Evil Eye icon for the System Tray
+const base64Icon = 'iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAALMSURBVHgB5VdrbBRVFD6zdmd3dntbupQqhaKlFFoKFAKlxVj4g7UxhEQ/kBg/kCggGg0akBgTIz80ajSgMf6R+MNIqA8wQf2hRGMJCS1WbAUL1kqlbNvuY/Zl97kzd2Zbd1sotgvxJbPT2Tnnve/ce+bO7HwP4wP0H9uS655dudrF51kGk2W2+n7u7h/gU3r2rG4+4B3y0lO6ZtWq1Rts2z7e3Nx87s+rR98DqquvP00k7oJkYw2Gv5a485j801VfX39fR0fHV33r95y07b5vF9j2xL17637845Ue8Pq6ukWSlP39WwP/B1fF/Tebg3yvUfG35uamG9bQxTcv9/xLrvvUo48+3n2X2f+lQGtr6zOmaf2hKAqRZZkwTaPZbO3cWfU783n+x8Y/Fv8oA4FAeG5ubv781+9NlWq1mqiqyo34/H7W1NSUkSSp9XoWp2t/E55kZWVlbWtr27z853X4/X5ZkiSqqiqp1Wqsqqrqy9ra2j/4nC084y1e4P8FmUwmb2ZmZnh11e+1t7V/95f87bU/O71+/8WLF1sODg6iqqq6+aCqqqo4NTV1PxgM7v5n4Z7gO4/b2tpO1NXV1d1vBsbGxj7y+/21iqI8o6rqi1z/Y7FYSF1dXffS4D1Ggcvl2g0wLpfrX4VpaWk5WVRUNJ93u+0wA9f8/PzsW/PZc3zY+8/1X012d/sT25L6Z/4U9W1sP0z08f3Y98z/29H4+Hg4PT09L4qiB5L5xW8sK1lZWfxYQ0PDa9x8FwM8T7BwZ778e71+/z/4r/1x4fT09JIoihNms3l+dnb253l5eS+/9tqr15P9L0j37m67Ydu2n23beP38/LyKx+PPW63W4fT0dEKSJL64dF71rY3Nzc0v8H6nZ2Zm1vB35vP5pkwm83hSUpL36NGju7mPjVevXuU/Z+T6f85XwHq93q3cZ1pNTc32hQsXbv1XAQMDA/9kWZYwTZPvGg6HaU1NTfK33377Lcf/w6d55x99Gf8Bf1Z+bU3o6sYAAAAASUVORK5CYII=';
+
+const outPath = path.join(__dirname, 'assets', 'tray-icon.png');
+fs.writeFileSync(outPath, Buffer.from(base64Icon, 'base64'));
+console.log('Saved tray-icon.png successfully');

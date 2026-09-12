@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Lucky Dangle</title>
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    -webkit-user-select: none;
+    user-select: none;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+
+  #container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  /* The Pivot point at top right corner */
+  #pivot {
+    position: absolute;
+    top: 20px;
+    left: calc(100% - 60px);
+    width: 2px;
+    height: 1px;
+    transform-origin: top center;
+    will-change: transform;
+    pointer-events: none;
+  }
+
+  /* Braided Golden Metallic Cord */
+  #thread {
+    position: absolute;
+    top: 0;
+    left: -1px;
+    width: 2.5px;
+    height: 90px;
+    background: linear-gradient(
+      to bottom,
+      #d4af37 0%,
+      #b38728 35%,
+      #fef08a 60%,
+      #aa771c 100%
+    );
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.4);
+    border-radius: 1.5px;
+    pointer-events: none;
+    transform-origin: top center;
+    z-index: 1;
+  }
+
+  /* Decorative beads container */
+  #beads-container {
+    position: absolute;
+    left: 0;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5px;
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  .bead {
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.45), inset 1px 1px 2px rgba(255, 255, 255, 0.7);
+    flex-shrink: 0;
+  }
+
+  .bead-white {
+    width: 9px;
+    height: 9px;
+    background: radial-gradient(circle at 35% 35%, #ffffff 0%, #f1f5f9 65%, #94a3b8 100%);
+  }
+
+  .bead-eye {
+    width: 13px;
+    height: 13px;
+    background: radial-gradient(
+      circle at 50% 50%,
+      #000000 0%,
+      #000000 22%,
+      #38bdf8 24%,
+      #0284c7 52%,
+      #ffffff 54%,
+      #ffffff 72%,
+      #092db3 74%,
+      #020d44 100%
+    );
+    position: relative;
+  }
+
+  .bead-eye::after {
+    content: '';
+    position: absolute;
+    top: 1.5px;
+    left: 2px;
+    width: 4px;
+    height: 2.5px;
+    background: rgba(255, 255, 255, 0.85);
+    border-radius: 50%;
+    transform: rotate(-30deg);
+    pointer-events: none;
+  }
+
+  /* The Charm Wrapper */
+  #charm {
+    position: absolute;
+    left: 0;
+    transform: translateX(-50%);
+    width: 110px;
+    height: 110px;
+    cursor: grab;
+    z-index: 3;
+    pointer-events: auto;
+  }
+
+  #charm.grabbing {
+    cursor: grabbing;
+  }
+
+  /* Inner container for animations so alignment & attachments never break */
+  #charm-inner {
+    width: 100%;
+    height: 100%;
+    transform-origin: top center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+  }
+
+  #charm-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 10px 14px rgba(0,0,0,0.5));
+    pointer-events: none;
+  }
+
+  /* Ritual Pulse Animation (Pulsing cleanly from attachment point) */
+  @keyframes ritual-pulse {
+    0% {
+      transform: scale(1);
+      filter: drop-shadow(0 0 0 rgba(56, 189, 248, 0));
+    }
+    30% {
+      transform: scale(1.24);
+      filter: drop-shadow(0 0 28px rgba(56, 189, 248, 0.95)) drop-shadow(0 0 45px rgba(250, 204, 21, 0.85));
+    }
+    60% {
+      transform: scale(0.94);
+      filter: drop-shadow(0 0 16px rgba(56, 189, 248, 0.6));
+    }
+    100% {
+      transform: scale(1);
+      filter: drop-shadow(0 10px 14px rgba(0,0,0,0.5));
+    }
+  }
+
+  #charm-inner.ritual {
+    animation: ritual-pulse 0.75s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  /* Sparkle Particles */
+  .sparkle-particle {
+    position: absolute;
+    pointer-events: none;
+    width: 7px;
+    height: 7px;
+    background: #fde047;
+    border-radius: 50%;
+    box-shadow: 0 0 10px #38bdf8, 0 0 20px #fef08a;
+    animation: float-sparkle 0.85s ease-out forwards;
+    z-index: 10;
+  }
+
+  @keyframes float-sparkle {
+    0% {
+      opacity: 1;
+      transform: translate(0, 0) scale(1);
+    }
+    100% {
+      opacity: 0;
+      transform: translate(var(--tx), var(--ty)) scale(0.2);
+    }
+  }
+</style>
+</head>
+<body>
+  <div id="container">
+    <div id="pivot">
+      <div id="thread"></div>
+      <div id="beads-container">
+        <div class="bead bead-white"></div>
+        <div class="bead bead-eye"></div>
+        <div class="bead bead-white"></div>
+      </div>
+      <div id="charm" class="interactive">
+        <div id="charm-inner">
+          <img id="charm-img" src="../assets/charms/evil-eye.svg" alt="charm" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="renderer.js"></script>
+</body>
+</html>

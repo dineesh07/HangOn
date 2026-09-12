@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Lucky Dangle Settings & Customizer</title>
+<!-- Google Font: Outfit -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="settings.css" />
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="header">
+      <div class="header-left">
+        <div class="logo-wrapper">
+          <img src="../assets/charms/evil-eye.svg" alt="logo" class="header-logo" />
+        </div>
+        <div>
+          <h1 class="header-title">Lucky Dangle</h1>
+          <p class="header-subtitle">Desktop Talisman & Physics Charm</p>
+        </div>
+      </div>
+      <div class="header-right">
+        <div class="status-pill" id="status-pill">
+          <span class="status-dot"></span>
+          <span id="status-text">Active</span>
+        </div>
+        <label class="toggle-switch" title="Enable / Disable Dangle">
+          <input type="checkbox" id="toggle-enabled" checked />
+          <span class="slider"></span>
+        </label>
+        <button id="btn-ritual" class="btn btn-primary" title="Trigger blessing animation">
+          <svg class="btn-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+          </svg>
+          <span>Bless Now</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="content">
+      <!-- Section: Charm Gallery -->
+      <section class="card-section">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title">Select Dangle Charm</h2>
+            <p class="section-desc">Choose a built-in talisman or upload your own transparent logo / PNG / GIF.</p>
+          </div>
+          <button id="btn-upload" class="btn btn-secondary">
+            <svg class="btn-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            <span>Upload Charm</span>
+          </button>
+        </div>
+
+        <div id="charms-grid" class="charms-grid">
+          <!-- Dynamically populated cards -->
+        </div>
+      </section>
+
+      <!-- Section: Size & Hanging Controls -->
+      <section class="card-section">
+        <h2 class="section-title">Size & Hanging Position</h2>
+        <p class="section-desc">Fine-tune the string length, charm scale, and corner placement.</p>
+
+        <div class="controls-list">
+          <!-- Hanging Length -->
+          <div class="control-row">
+            <div class="control-label-group">
+              <span class="control-label">Hanging Length (Thread)</span>
+              <span class="control-sub">Distance from the top of the screen</span>
+            </div>
+            <div class="slider-wrapper">
+              <input type="range" id="slider-hanging" min="30" max="220" value="90" step="2" />
+              <span id="val-hanging" class="val-badge">90px</span>
+            </div>
+            <div class="quick-chips">
+              <button class="chip" onclick="setHanging(50)">Short (50px)</button>
+              <button class="chip" onclick="setHanging(90)">Med (90px)</button>
+              <button class="chip" onclick="setHanging(150)">Long (150px)</button>
+            </div>
+          </div>
+
+          <!-- Charm Size -->
+          <div class="control-row">
+            <div class="control-label-group">
+              <span class="control-label">Charm Size</span>
+              <span class="control-sub">Dimensions of the hanging amulet</span>
+            </div>
+            <div class="slider-wrapper">
+              <input type="range" id="slider-size" min="50" max="200" value="110" step="2" />
+              <span id="val-size" class="val-badge">110px</span>
+            </div>
+            <div class="quick-chips">
+              <button class="chip" onclick="setSize(80)">Small (80px)</button>
+              <button class="chip" onclick="setSize(110)">Med (110px)</button>
+              <button class="chip" onclick="setSize(150)">Large (150px)</button>
+            </div>
+          </div>
+
+          <!-- Right Edge Offset -->
+          <div class="control-row">
+            <div class="control-label-group">
+              <span class="control-label">Right Corner Margin</span>
+              <span class="control-sub">Distance from the right edge of your monitor</span>
+            </div>
+            <div class="slider-wrapper">
+              <input type="range" id="slider-offset" min="10" max="600" value="60" step="5" />
+              <span id="val-offset" class="val-badge">60px</span>
+            </div>
+            <div class="quick-chips">
+              <button class="chip" onclick="setOffset(20)">Far Right (20px)</button>
+              <button class="chip" onclick="setOffset(60)">Corner (60px)</button>
+              <button class="chip" onclick="setOffset(120)">Standard (120px)</button>
+              <button class="chip" onclick="setOffset(240)">Inward (240px)</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section: Physics & Effects -->
+      <section class="card-section">
+        <h2 class="section-title">Swing Physics & Audio</h2>
+        
+        <div class="grid-2col">
+          <div class="toggle-card">
+            <div>
+              <div class="toggle-card-title">Chime Sound Effects</div>
+              <div class="toggle-card-sub">Harmonious bell chime on blessing & click</div>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="toggle-sound" checked />
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <div class="toggle-card">
+            <div>
+              <div class="toggle-card-title">Launch on Windows Startup</div>
+              <div class="toggle-card-sub">Start minimized in taskbar tray on login</div>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="toggle-startup" />
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <div class="control-row" style="margin-top: 14px;">
+          <div class="control-label-group">
+            <span class="control-label">Swing Elasticity & Responsiveness</span>
+            <span class="control-sub">Strength of the rubber-band stretch & pendulum return</span>
+          </div>
+          <div class="slider-wrapper">
+            <input type="range" id="slider-elasticity" min="4" max="25" value="10" step="1" />
+            <span id="val-elasticity" class="val-badge">10</span>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-tip">
+        <svg class="tip-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="16" x2="12" y2="12"></line>
+          <line x1="12" y1="8" x2="12.01" y2="8"></line>
+        </svg>
+        <span><strong>Quick Access:</strong> Left-click the taskbar tray icon to show/hide anytime.</span>
+      </div>
+      <button id="btn-reset" class="btn btn-outline">Reset Defaults</button>
+    </footer>
+  </div>
+
+  <script src="settings.js"></script>
+</body>
+</html>
