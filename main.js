@@ -3,15 +3,11 @@ const path = require('path');
 const fs = require('fs');
 
 process.on('uncaughtException', (err) => {
-  try {
-    fs.appendFileSync(path.join(__dirname, 'app_debug.log'), `UncaughtException: ${err && err.stack ? err.stack : err}\n`);
-  } catch (e) {}
+  console.error('UncaughtException:', err);
 });
 
 process.on('unhandledRejection', (reason) => {
-  try {
-    fs.appendFileSync(path.join(__dirname, 'app_debug.log'), `UnhandledRejection: ${reason && reason.stack ? reason.stack : reason}\n`);
-  } catch (e) {}
+  console.error('UnhandledRejection:', reason);
 });
 
 const { ConfigStore, PRESET_CHARMS } = require('./configStore');
@@ -22,9 +18,6 @@ app.setAppUserModelId('com.hangon.app');
 // Single instance lock
 const gotLock = app.requestSingleInstanceLock();
 if (!gotLock) {
-  try {
-    fs.writeFileSync(path.join(__dirname, 'app_debug.log'), `Single instance lock failed at ${new Date().toISOString()}\n`);
-  } catch (e) {}
   console.log('Could not acquire single instance lock, quitting.');
   app.quit();
   process.exit(0);
@@ -92,7 +85,6 @@ function createOverlayWindow() {
   win.loadFile(path.join(__dirname, 'renderer', 'index.html'));
 
   win.webContents.on('did-finish-load', () => {
-    fs.appendFileSync(path.join(__dirname, 'app_debug.log'), `Renderer did-finish-load\n`);
     syncConfigToWindows();
     if (config.enabled) {
       win.showInactive();
@@ -100,7 +92,7 @@ function createOverlayWindow() {
   });
 
   win.webContents.on('did-fail-load', (e, code, desc) => {
-    fs.appendFileSync(path.join(__dirname, 'app_debug.log'), `Renderer did-fail-load: ${code} ${desc}\n`);
+    console.error('Renderer did-fail-load:', code, desc);
   });
 
   win.setIgnoreMouseEvents(true, { forward: true });
