@@ -5,7 +5,6 @@ import {
   Sparkles,
   Download,
   Bell,
-  Copy,
   Check,
   Shield,
   Heart,
@@ -19,25 +18,31 @@ import {
   Scale,
   Package,
   Zap,
+  Plus,
+  Image as ImageIcon,
 } from 'lucide-react';
 
-const CHARMS = [
-  { id: 'evil-eye', name: 'Nazar Evil Eye', file: 'evil-eye.svg', bg: 'bg-cyan', blessing: 'Wards off bugs & workspace chaos' },
-  { id: 'lucky-cat', name: 'Maneki-Neko', file: 'lucky-cat.svg', bg: 'bg-gold', blessing: 'Prosperity & serendipity' },
-  { id: 'gold-coin', name: 'Feng Shui Coin', file: 'gold-coin.svg', bg: 'bg-gold', blessing: 'Abundance & financial fortune' },
-  { id: 'lucky-clover', name: 'Emerald Clover', file: 'lucky-clover.svg', bg: 'bg-mint', blessing: 'Serendipitous breakthroughs' },
-  { id: 'mystic-crystal', name: 'Celestial Crystal', file: 'mystic-crystal.svg', bg: 'bg-lavender', blessing: 'Deep focus & mental clarity' },
-  { id: 'frangipani', name: 'Frangipani', file: 'frangipani.png', bg: 'bg-pink', blessing: 'Calm tranquility & renewal' },
-  { id: 'beluga-cat', name: 'Beluga Cat', file: 'beluga-cat.png', bg: 'bg-cyan', blessing: 'Wholesome humor & smiles' },
-  { id: 'beast-boy', name: 'Beast Boy', file: 'beast-boy.png', bg: 'bg-mint', blessing: 'High energy & resilience' },
-  { id: 'master-jd', name: 'Master JD', file: 'master-jd.png', bg: 'bg-gold', blessing: 'Mastery & steady leadership' },
-  { id: 'sunflower', name: 'Sunflower', file: 'sunflower.png', bg: 'bg-gold', blessing: 'Joy, brightness & optimism' },
+const BASE = import.meta.env.BASE_URL || './';
+
+const INITIAL_CHARMS = [
+  { id: 'evil-eye', name: 'Nazar Evil Eye', file: 'evil-eye.svg', src: `${BASE}assets/charms/evil-eye.svg`, bg: 'bg-cyan', blessing: 'Wards off bugs & workspace chaos' },
+  { id: 'lucky-cat', name: 'Maneki-Neko', file: 'lucky-cat.svg', src: `${BASE}assets/charms/lucky-cat.svg`, bg: 'bg-gold', blessing: 'Prosperity & serendipity' },
+  { id: 'gold-coin', name: 'Feng Shui Coin', file: 'gold-coin.svg', src: `${BASE}assets/charms/gold-coin.svg`, bg: 'bg-gold', blessing: 'Abundance & financial fortune' },
+  { id: 'lucky-clover', name: 'Emerald Clover', file: 'lucky-clover.svg', src: `${BASE}assets/charms/lucky-clover.svg`, bg: 'bg-mint', blessing: 'Serendipitous breakthroughs' },
+  { id: 'mystic-crystal', name: 'Celestial Crystal', file: 'mystic-crystal.svg', src: `${BASE}assets/charms/mystic-crystal.svg`, bg: 'bg-lavender', blessing: 'Deep focus & mental clarity' },
+  { id: 'frangipani', name: 'Frangipani', file: 'frangipani.png', src: `${BASE}assets/charms/frangipani.png`, bg: 'bg-pink', blessing: 'Calm tranquility & renewal' },
+  { id: 'beluga-cat', name: 'Beluga Cat', file: 'beluga-cat.png', src: `${BASE}assets/charms/beluga-cat.png`, bg: 'bg-cyan', blessing: 'Wholesome humor & smiles' },
+  { id: 'beast-boy', name: 'Beast Boy', file: 'beast-boy.png', src: `${BASE}assets/charms/beast-boy.png`, bg: 'bg-mint', blessing: 'High energy & resilience' },
+  { id: 'master-jd', name: 'Master JD', file: 'master-jd.png', src: `${BASE}assets/charms/master-jd.png`, bg: 'bg-gold', blessing: 'Mastery & steady leadership' },
+  { id: 'sunflower', name: 'Sunflower', file: 'sunflower.png', src: `${BASE}assets/charms/sunflower.png`, bg: 'bg-gold', blessing: 'Joy, brightness & optimism' },
 ];
 
 export default function App() {
-  const [activeCharm, setActiveCharm] = useState(CHARMS[0]);
+  const [charmsList, setCharmsList] = useState(INITIAL_CHARMS);
+  const [activeCharm, setActiveCharm] = useState(INITIAL_CHARMS[0]);
   const [copied, setCopied] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
+  const fileInputRef = useRef(null);
 
   // Global Ctrl + Q shortcut listener
   useEffect(() => {
@@ -67,21 +72,52 @@ export default function App() {
     });
   };
 
+  // Custom User Image Upload Handler
+  const handleCustomUpload = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const objectUrl = URL.createObjectURL(file);
+    const cleanName = file.name.replace(/\.[^/.]+$/, '').slice(0, 18);
+
+    const newCharm = {
+      id: `custom-${Date.now()}`,
+      name: cleanName || 'Custom Charm',
+      src: objectUrl,
+      bg: 'bg-cyan',
+      blessing: 'Custom uploaded talisman charm',
+      isCustom: true,
+    };
+
+    setCharmsList((prev) => [newCharm, ...prev]);
+    setActiveCharm(newCharm);
+    triggerBlessing();
+  };
+
   return (
     <div className="min-h-screen">
       
       {/* Toast Notification for Ctrl+Q */}
       {toastMessage && (
         <div className="blessing-toast">
-          <Sparkles size={18} className="text-amber-300" />
+          <Sparkles size={18} color="#fde047" />
           <span>{toastMessage}</span>
         </div>
       )}
 
+      {/* Hidden File Input for Custom Charm Upload */}
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/png, image/gif, image/webp, image/svg+xml, image/jpeg"
+        onChange={handleCustomUpload}
+        style={{ display: 'none' }}
+      />
+
       {/* Sticky Navbar */}
       <nav className="navbar">
         <a href="#" className="nav-brand">
-          <img src="/assets/icon.png" alt="Hang On" className="nav-logo-icon" />
+          <img src={`${BASE}assets/icon.png`} alt="Hang On" className="nav-logo-icon" />
           <span>Hang On</span>
         </a>
         
@@ -134,7 +170,7 @@ export default function App() {
 
               <div className="hero-ctas">
                 <a
-                  href="/downloads/Hang-On-Setup-1.0.0.exe"
+                  href={`${BASE}downloads/Hang-On-Setup-1.0.0.exe`}
                   download="Hang-On-Setup-1.0.0.exe"
                   className="btn btn-primary btn-lg"
                 >
@@ -148,7 +184,7 @@ export default function App() {
 
               {/* Shortcut Banner */}
               <div className="shortcut-pill-banner">
-                <Keyboard size={16} className="text-sky-600" />
+                <Keyboard size={16} color="#0284c7" />
                 <span>Blessing Ritual:</span>
                 <span className="kbd-badge">Ctrl</span> + <span className="kbd-badge">Q</span>
                 <span style={{ color: '#cbd5e1' }}>•</span>
@@ -200,7 +236,7 @@ export default function App() {
 
                 {/* React 2D Spring Physics Rig */}
                 <HangingCharm
-                  charmSrc={`/assets/charms/${activeCharm.file}`}
+                  charmSrc={activeCharm.src}
                   charmName={activeCharm.name}
                   size={110}
                   restLen={100}
@@ -217,8 +253,8 @@ export default function App() {
                 </span>
                 <div className="stage-buttons">
                   <button onClick={triggerBlessing} className="btn-icon-pill">
-                    <Bell size={14} />
-                    Ring Chime (Ctrl+Q)
+                    <Bell size={15} color="#0284c7" />
+                    <span>Ring Chime (Ctrl+Q)</span>
                   </button>
                 </div>
               </div>
@@ -302,7 +338,7 @@ export default function App() {
             </span>
             <h2 className="section-title">Find the charm that matches your vibe.</h2>
             <p className="section-subtitle">
-              Click any talisman below to see its instant live physics preview and blessing description right here!
+              Click any talisman below or upload your own PNG/GIF to see its instant live physics preview right here!
             </p>
           </div>
 
@@ -316,7 +352,7 @@ export default function App() {
 
               <div className="spotlight-canvas-area">
                 <HangingCharm
-                  charmSrc={`/assets/charms/${activeCharm.file}`}
+                  charmSrc={activeCharm.src}
                   charmName={activeCharm.name}
                   size={90}
                   restLen={80}
@@ -332,14 +368,28 @@ export default function App() {
               </div>
 
               <button onClick={triggerBlessing} className="btn btn-secondary" style={{ width: '100%' }}>
-                <Sparkles size={16} />
+                <Sparkles size={16} color="#f59e0b" />
                 Bless Now (Ctrl + Q)
               </button>
             </div>
 
-            {/* Right: Clickable Grid */}
+            {/* Right: Clickable Grid + Upload Custom Card */}
             <div className="gallery-grid">
-              {CHARMS.map((c) => {
+              
+              {/* Upload Card */}
+              <div
+                onClick={() => fileInputRef.current?.click()}
+                className="charm-card upload-charm-card"
+                title="Upload custom PNG/GIF image"
+              >
+                <div className="charm-preview-wrap bg-cyan">
+                  <Plus size={28} color="#0284c7" />
+                </div>
+                <div className="charm-name" style={{ color: '#0284c7' }}>Upload PNG</div>
+              </div>
+
+              {/* Charm List */}
+              {charmsList.map((c) => {
                 const isActive = c.id === activeCharm.id;
                 return (
                   <div
@@ -352,9 +402,12 @@ export default function App() {
                   >
                     <div className={`charm-preview-wrap ${c.bg}`}>
                       <img
-                        src={`/assets/charms/${c.file}`}
+                        src={c.src}
                         alt={c.name}
                         className="charm-preview-img"
+                        onError={(e) => {
+                          e.target.src = `${BASE}assets/icon.png`;
+                        }}
                       />
                     </div>
                     <div className="charm-name">{c.name}</div>
@@ -509,7 +562,7 @@ export default function App() {
       <section className="section download-section" id="download">
         <div className="container">
           <div className="download-card">
-            <img src="/assets/icon.png" alt="Hang On App Icon" className="download-icon" />
+            <img src={`${BASE}assets/icon.png`} alt="Hang On App Icon" className="download-icon" />
 
             <div>
               <h2 className="section-title">Ready to hang something lucky?</h2>
@@ -520,7 +573,7 @@ export default function App() {
 
             <div className="download-buttons">
               <a
-                href="/downloads/Hang-On-Setup-1.0.0.exe"
+                href={`${BASE}downloads/Hang-On-Setup-1.0.0.exe`}
                 download="Hang-On-Setup-1.0.0.exe"
                 className="btn btn-primary btn-lg"
               >
@@ -529,7 +582,7 @@ export default function App() {
               </a>
 
               <a
-                href="/downloads/Hang-On-Portable.exe"
+                href={`${BASE}downloads/Hang-On-Portable.exe`}
                 download="Hang-On-Portable.exe"
                 className="btn btn-secondary btn-lg"
               >

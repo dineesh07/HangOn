@@ -3,7 +3,7 @@ import { playBlessingSound } from '../audio';
 
 export default function HangingCharm({
   charmSrc,
-  charmName,
+  charmName = 'Talisman',
   size = 110,
   restLen = 100,
   hasBeads = true,
@@ -11,14 +11,13 @@ export default function HangingCharm({
   className = '',
   onBless,
 }) {
-  const containerRef = useRef(null);
   const pivotRef = useRef(null);
   const threadRef = useRef(null);
   const beadsRef = useRef(null);
   const charmRef = useRef(null);
   const imgRef = useRef(null);
 
-  // Physics state stored in refs to avoid React re-renders in animation loop
+  // Keep all high-frequency physics in ref to prevent React re-renders & jank
   const physRef = useRef({
     angle: 0,
     angularVelocity: 0,
@@ -30,7 +29,6 @@ export default function HangingCharm({
     lastTime: performance.now(),
   });
 
-  // Update restLen if prop changes
   useEffect(() => {
     physRef.current.restLength = restLen;
   }, [restLen]);
@@ -38,7 +36,7 @@ export default function HangingCharm({
   // Blessing sparkle pulse trigger
   const triggerBless = () => {
     playBlessingSound();
-    physRef.current.lengthVelocity += 35;
+    physRef.current.lengthVelocity += 32;
     physRef.current.angularVelocity += (Math.random() > 0.5 ? 1 : -1) * 3.0;
 
     if (imgRef.current) {
@@ -52,34 +50,34 @@ export default function HangingCharm({
   useEffect(() => {
     let animId;
 
-    const updateDOM = (lenPx) => {
+    const updateDOM = (angleDeg, lenPx) => {
       const BEADS_STACK = 32;
       const threadAbove = Math.max(10, lenPx - BEADS_STACK);
 
-      if (beadsRef.current) {
-        beadsRef.current.style.top = `${threadAbove}px`;
+      if (pivotRef.current) {
+        pivotRef.current.style.transform = `rotate(${angleDeg}deg)`;
       }
       if (threadRef.current) {
         threadRef.current.style.height = `${threadAbove + (hasBeads ? BEADS_STACK : 0)}px`;
       }
-      if (charmRef.current) {
-        charmRef.current.style.top = `${threadAbove + (hasBeads ? BEADS_STACK : 0) - 6}px`;
+      if (beadsRef.current) {
+        beadsRef.current.style.transform = `translate3d(-50%, ${threadAbove}px, 0)`;
       }
-      if (pivotRef.current) {
-        pivotRef.current.style.transform = `rotate(${physRef.current.angle}deg)`;
+      if (charmRef.current) {
+        charmRef.current.style.transform = `translate3d(-50%, ${threadAbove + (hasBeads ? BEADS_STACK : 0) - 6}px, 0)`;
       }
     };
 
     const loop = (now) => {
       const p = physRef.current;
-      const dt = Math.min((now - p.lastTime) / 1000, 0.04);
+      const dt = Math.min((now - p.lastTime) / 1000, 0.035);
       p.lastTime = now;
 
-      const springK = 9.5;
-      const damping = 2.0;
-      const stretchK = 90;
-      const stretchDamping = 6.0;
-      const MAX_ANGLE = 60;
+      const springK = 10.0;
+      const damping = 2.2;
+      const stretchK = 95.0;
+      const stretchDamping = 6.5;
+      const MAX_ANGLE = 62;
 
       if (!p.isDragging) {
         // 1. Angular Pendulum Motion
@@ -88,9 +86,9 @@ export default function HangingCharm({
         p.angle += p.angularVelocity * (180 / Math.PI) * dt;
         p.angle = Math.max(-MAX_ANGLE, Math.min(MAX_ANGLE, p.angle));
 
-        // Subtle idle breathing sway if resting
+        // Organic idle breathing sway if resting
         if (Math.abs(p.angle) < 0.08 && Math.abs(p.angularVelocity) < 0.08) {
-          p.angle = Math.sin(now / 1000 * 1.5) * 2.5;
+          p.angle = Math.sin(now / 1000 * 1.6) * 3.2;
         }
 
         // 2. Vertical Stretch Elasticity
@@ -99,26 +97,25 @@ export default function HangingCharm({
         p.lengthVelocity += lengthAcc * dt;
         p.currentLength += p.lengthVelocity * dt;
 
-        if (Math.abs(displacement) < 0.2 && Math.abs(p.lengthVelocity) < 0.2) {
+        if (Math.abs(displacement) < 0.15 && Math.abs(p.lengthVelocity) < 0.15) {
           p.currentLength = p.restLength;
           p.lengthVelocity = 0;
         }
       }
 
-      updateDOM(p.currentLength);
+      updateDOM(p.angle, p.currentLength);
       animId = requestAnimationFrame(loop);
     };
 
     animId = requestAnimationFrame(loop);
-
     return () => cancelAnimationFrame(animId);
   }, [hasBeads]);
 
-  // Global mouse / touch drag handlers
+  // Pointer drag interactions
   useEffect(() => {
     if (!interactive) return;
 
-    const handlePointerDown = (clientX, clientY) => {
+    const onPointerDown = (clientX, clientY) => {
       const p = physRef.current;
       p.isDragging = true;
       p.angularVelocity = 0;
@@ -126,7 +123,7 @@ export default function HangingCharm({
       p.history = [{ angle: p.angle, length: p.currentLength, t: performance.now() }];
     };
 
-    const handlePointerMove = (clientX, clientY) => {
+    const onPointerMove = (clientX, clientY) => {
       const p = physRef.current;
       if (!p.isDragging || !pivotRef.current) return;
 
@@ -138,20 +135,20 @@ export default function HangingCharm({
       const dy = clientY - py;
       const dist = Math.sqrt(dx * dx + dy * dy);
 
-      // Inverted angle calculation for correct left-left / right-right tracking
-      const ang = -Math.atan2(dx, Math.max(10, dy)) * (180 / Math.PI);
-      const MAX_ANGLE = 60;
+      // Inverted angle calculation for intuitive left-left / right-right tracking
+      const ang = -Math.atan2(dx, Math.max(12, dy)) * (180 / Math.PI);
+      const MAX_ANGLE = 62;
       p.angle = Math.max(-MAX_ANGLE, Math.min(MAX_ANGLE, ang));
 
       const minLen = 45;
       const maxLen = 220;
-      p.currentLength = Math.max(minLen, Math.min(maxLen, dist - (size * 0.3)));
+      p.currentLength = Math.max(minLen, Math.min(maxLen, dist - (size * 0.35)));
 
       p.history.push({ angle: p.angle, length: p.currentLength, t: performance.now() });
       if (p.history.length > 5) p.history.shift();
     };
 
-    const handlePointerUp = () => {
+    const onPointerUp = () => {
       const p = physRef.current;
       if (!p.isDragging) return;
       p.isDragging = false;
@@ -169,57 +166,56 @@ export default function HangingCharm({
       }
     };
 
-    const onMouseDown = (e) => {
+    const handleMouseDown = (e) => {
       if (e.button !== 0) return;
-      handlePointerDown(e.clientX, e.clientY);
+      onPointerDown(e.clientX, e.clientY);
       e.preventDefault();
     };
+    const handleMouseMove = (e) => onPointerMove(e.clientX, e.clientY);
+    const handleMouseUp = () => onPointerUp();
 
-    const onMouseMove = (e) => handlePointerMove(e.clientX, e.clientY);
-    const onMouseUp = () => handlePointerUp();
-
-    const onTouchStart = (e) => {
+    const handleTouchStart = (e) => {
       if (e.touches.length > 0) {
-        handlePointerDown(e.touches[0].clientX, e.touches[0].clientY);
+        onPointerDown(e.touches[0].clientX, e.touches[0].clientY);
       }
     };
-    const onTouchMove = (e) => {
+    const handleTouchMove = (e) => {
       if (e.touches.length > 0) {
-        handlePointerMove(e.touches[0].clientX, e.touches[0].clientY);
+        onPointerMove(e.touches[0].clientX, e.touches[0].clientY);
       }
     };
-    const onTouchEnd = () => handlePointerUp();
+    const handleTouchEnd = () => onPointerUp();
 
     const charmEl = charmRef.current;
     if (charmEl) {
-      charmEl.addEventListener('mousedown', onMouseDown);
-      charmEl.addEventListener('touchstart', onTouchStart, { passive: true });
+      charmEl.addEventListener('mousedown', handleMouseDown);
+      charmEl.addEventListener('touchstart', handleTouchStart, { passive: true });
     }
 
-    window.addEventListener('mousemove', onMouseMove);
-    window.addEventListener('mouseup', onMouseUp);
-    window.addEventListener('touchmove', onTouchMove, { passive: true });
-    window.addEventListener('touchend', onTouchEnd);
+    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mouseup', handleMouseUp);
+    window.addEventListener('touchmove', handleTouchMove, { passive: true });
+    window.addEventListener('touchend', handleTouchEnd);
 
     return () => {
       if (charmEl) {
-        charmEl.removeEventListener('mousedown', onMouseDown);
-        charmEl.removeEventListener('touchstart', onTouchStart);
+        charmEl.removeEventListener('mousedown', handleMouseDown);
+        charmEl.removeEventListener('touchstart', handleTouchStart);
       }
-      window.removeEventListener('mousemove', onMouseMove);
-      window.removeEventListener('mouseup', onMouseUp);
-      window.removeEventListener('touchmove', onTouchMove);
-      window.removeEventListener('touchend', onTouchEnd);
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseup', handleMouseUp);
+      window.removeEventListener('touchmove', handleTouchMove);
+      window.removeEventListener('touchend', handleTouchEnd);
     };
   }, [interactive, size]);
 
   return (
-    <div
-      ref={containerRef}
-      className={`relative w-full h-full flex justify-center select-none ${className}`}
-    >
+    <div className={`web-canvas-container ${className}`}>
       <div ref={pivotRef} className="web-pivot">
+        {/* Braided Golden Metallic Cord */}
         <div ref={threadRef} className="web-thread" />
+
+        {/* Decorative Beads */}
         {hasBeads && (
           <div ref={beadsRef} className="web-beads-container">
             <div className="web-bead-white" />
@@ -227,18 +223,21 @@ export default function HangingCharm({
             <div className="web-bead-white" />
           </div>
         )}
+
+        {/* Charm Wrapper */}
         <div
           ref={charmRef}
           className="web-charm"
           style={{ width: `${size}px`, height: `${size}px` }}
           onClick={triggerBless}
-          title="Click to bless or drag to swing"
+          title="Click to ring blessing or drag to swing"
         >
           <img
             ref={imgRef}
             src={charmSrc}
             alt={charmName}
-            className="w-full h-full object-contain pointer-events-none transition-transform duration-200"
+            draggable="false"
+            className="charm-image-layer"
           />
         </div>
       </div>
