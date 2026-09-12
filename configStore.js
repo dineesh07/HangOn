@@ -56,6 +56,46 @@ const PRESET_CHARMS = [
     file: 'mystic-crystal.svg',
     hasBeads: true,
     description: 'Radiant crystal shard for clarity, focus, and cosmic blessings'
+  },
+  {
+    id: 'beast-boy',
+    name: 'Beast Boy',
+    type: 'preset',
+    file: 'beast-boy.png',
+    hasBeads: false,
+    description: 'Beast Boy hero charm'
+  },
+  {
+    id: 'beluga-cat',
+    name: 'Beluga Cat',
+    type: 'preset',
+    file: 'beluga-cat.png',
+    hasBeads: false,
+    description: 'Beluga Cat smiling companion'
+  },
+  {
+    id: 'frangipani',
+    name: 'Frangipani Blossom',
+    type: 'preset',
+    file: 'frangipani.png',
+    hasBeads: true,
+    description: 'Fragrant tropical frangipani blossom for peace and harmony'
+  },
+  {
+    id: 'master-jd',
+    name: 'Master JD',
+    type: 'preset',
+    file: 'master-jd.png',
+    hasBeads: false,
+    description: 'Master JD custom character charm'
+  },
+  {
+    id: 'sunflower',
+    name: 'Golden Sunflower',
+    type: 'preset',
+    file: 'sunflower.png',
+    hasBeads: false,
+    description: 'Bright and cheerful sunflower radiating positive vibes'
   }
 ];
 

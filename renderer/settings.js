@@ -271,7 +271,7 @@ function updatePromptOutput() {
   if (!promptOutputText) return;
 
   const objectVal = promptObject ? promptObject.value.trim() : '';
-  const style = document.querySelector('input[name="ai-style"]:checked')?.value || 'glass';
+  const style = document.querySelector('input[name="ai-style"]:checked')?.value || 'enamel';
   const format = document.querySelector('input[name="ai-format"]:checked')?.value || '3d';
   const attach = document.querySelector('input[name="ai-attach"]:checked')?.value || 'loop';
 
