@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="100%" height="100%">
+  <defs>
+    <!-- Outer Deep Blue Glass Radial Gradient -->
+    <radialGradient id="glassBlue" cx="42%" cy="38%" r="62%">
+      <stop offset="0%" stop-color="#3b82f6"/>
+      <stop offset="28%" stop-color="#1d4ed8"/>
+      <stop offset="65%" stop-color="#092db3"/>
+      <stop offset="90%" stop-color="#03166c"/>
+      <stop offset="100%" stop-color="#020d44"/>
+    </radialGradient>
+
+    <!-- White Ring Radial Gradient -->
+    <radialGradient id="whiteRing" cx="44%" cy="42%" r="56%">
+      <stop offset="65%" stop-color="#ffffff"/>
+      <stop offset="92%" stop-color="#f1f5f9"/>
+      <stop offset="100%" stop-color="#cbd5e1"/>
+    </radialGradient>
+
+    <!-- Cyan / Sky Blue Iris Radial Gradient -->
+    <radialGradient id="turquoiseRing" cx="44%" cy="42%" r="56%">
+      <stop offset="0%" stop-color="#7dd3fc"/>
+      <stop offset="45%" stop-color="#38bdf8"/>
+      <stop offset="85%" stop-color="#0284c7"/>
+      <stop offset="100%" stop-color="#0369a1"/>
+    </radialGradient>
+
+    <!-- Center Pupil Gradient -->
+    <radialGradient id="pupilGrad" cx="42%" cy="40%" r="58%">
+      <stop offset="0%" stop-color="#1e293b"/>
+      <stop offset="65%" stop-color="#090d16"/>
+      <stop offset="100%" stop-color="#000000"/>
+    </radialGradient>
+
+    <!-- Metallic Gold Hanging Ring -->
+    <linearGradient id="goldRing" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fef08a"/>
+      <stop offset="45%" stop-color="#eab308"/>
+      <stop offset="85%" stop-color="#ca8a04"/>
+      <stop offset="100%" stop-color="#854d0e"/>
+    </linearGradient>
+
+    <!-- Glass Specular Highlight Gradient -->
+    <linearGradient id="specularGlow" x1="20%" y1="10%" x2="60%" y2="80%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.9"/>
+      <stop offset="35%" stop-color="#ffffff" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Attachment Loop at Top (Seamless connection) -->
+  <g>
+    <!-- Gold Top Ring -->
+    <circle cx="100" cy="22" r="11" fill="none" stroke="url(#goldRing)" stroke-width="4.5"/>
+    <circle cx="100" cy="22" r="11" fill="none" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+
+    <!-- Main Outer Glass Amulet Disc (Centered with ample margin so shadows never clip) -->
+    <circle cx="100" cy="112" r="74" fill="url(#glassBlue)"/>
+
+    <!-- Inner Glass Depth Rim -->
+    <circle cx="100" cy="112" r="72" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="1.5"/>
+    <circle cx="100" cy="112" r="74" fill="none" stroke="rgba(0,0,0,0.3)" stroke-width="1"/>
+
+    <!-- Concentric Rings -->
+    <!-- Middle White Ring -->
+    <circle cx="100" cy="112" r="48" fill="url(#whiteRing)"/>
+
+    <!-- Sky Blue / Turquoise Ring -->
+    <circle cx="100" cy="112" r="32" fill="url(#turquoiseRing)"/>
+
+    <!-- Center Black Pupil -->
+    <circle cx="100" cy="112" r="17" fill="url(#pupilGrad)"/>
+
+    <!-- Realistic Glass Curvature Glare -->
+    <path d="M 56,86 A 62,62 0 0,1 122,54 A 54,54 0 0,0 64,92 Z" fill="url(#specularGlow)"/>
+
+    <!-- Primary Glare Reflection Dots -->
+    <circle cx="94" cy="106" r="4.2" fill="#ffffff" opacity="0.95"/>
+    <circle cx="106" cy="118" r="2" fill="#ffffff" opacity="0.6"/>
+
+    <!-- Ambient Bottom Rim Highlight -->
+    <path d="M 62,146 A 72,72 0 0,0 138,146 A 70,70 0 0,1 62,146 Z" fill="#38bdf8" opacity="0.45"/>
+  </g>
+</svg>
